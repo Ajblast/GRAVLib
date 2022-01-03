@@ -113,17 +113,18 @@ function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests)
 	endif()
 endfunction()
 
-function(maketest TargetName DynamicRuntime SourceFiles)
+function(maketest TargetName DynamicRuntime SourceFiles LinkLibraries)
 	if(DebugInfo)
 		message("")
 		message("Make Tests: ${TargetName}")
 		message("Dynamic Runtime: ${DynamicRuntime}")
 		message("Source Files: ${SourceFiles}")
+		message("Link Libraries: ${LinkLibraries}")
 	endif()
 
 	add_executable(${TargetName} ${SourceFiles})
-	target_link_libraries(${TargetName} GTest::gtest_main)
-
+	target_link_libraries(${TargetName} GTest::gtest_main ${LinkLibraries})
+	
 	setmsvcruntime(${TargetName} ${DynamicRuntime})
 
 	include(GoogleTest)
