@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include <cstdarg>
+#include <random>
 
 // Concurrency
 #include <thread>
