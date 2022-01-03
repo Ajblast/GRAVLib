@@ -11,16 +11,18 @@
 #include <mutex>
 #include <algorithm>
 
+#define GRAV_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...); }
+
 namespace GRAVLib::Events
 {
 	template<typename... T>
-	using callback = std::function<bool(T...)>;
+	using eventCallback = std::function<bool(T...)>;
 	
 	///Storage used for an event
 	template<typename...  T>
 	struct eventStorage
 	{
-		callback<T...> m_CallbackFunction;
+		eventCallback<T...> m_CallbackFunction;
 		eventHandle m_Handle;
 	};
 
@@ -28,6 +30,9 @@ namespace GRAVLib::Events
 	template<typename... T>
 	class GRAVLibAPI event
 	{
+	public:
+		using callback = eventCallback<bool, T...>;
+		using storage = eventStorage<bool, T...>;
 	public:
 		event()	{}
 		event(GRAVLib::ref<IEventHandleGenerator> handleGenerator) : m_HandleGenerator(std::move(handleGenerator)) {}
@@ -52,7 +57,7 @@ namespace GRAVLib::Events
 		}
 		~event() {}
 
-		eventHandle registerCallback(const callback<bool, T...>& function)
+		eventHandle registerCallback(const callback& function)
 		{
 			Locks::scopedLock<decltype(m_VectorLock)> lock(m_VectorLock);
 
@@ -69,7 +74,7 @@ namespace GRAVLib::Events
 			Locks::scopedLock<decltype(m_VectorLock)> lock(m_VectorLock);
 
 			// Find the event by the handle value
-			auto it = std::find_if(m_Events.begin(), m_Events.end(), [handle](eventStorage<bool, T...> val) { return val.m_Handle == handle; });
+			auto it = std::find_if(m_Events.begin(), m_Events.end(), [handle](storage val) { return val.m_Handle == handle; });
 
 			if (it == m_Events.end())
 				return;
@@ -78,7 +83,7 @@ namespace GRAVLib::Events
 			m_Events.erase(it);
 		}
 
-		void execute(T... args)
+		bool execute(T... args)
 		{
 			Locks::scopedLock<decltype(m_VectorLock)> lock(m_VectorLock);
 
@@ -86,23 +91,30 @@ namespace GRAVLib::Events
 
 			// Don't do anything if there are no events
 			if (eventCount == 0)
-				return;
+				return false;
 
 			bool handled = false;
 			for (size_t i = 0; i < m_Events.size(); i++)
 				handled = m_Events[i].m_CallbackFunction(handled, args...);
 			
+			return handled;
 		}
-		void clear()
+
+		inline void clear()
 		{
 			Locks::scopedLock<decltype(m_VectorLock)> lock(m_VectorLock);
 
 			m_Events.clear();
 		}
+		inline const size_t size()
+		{
+			Locks::scopedLock<decltype(m_VectorLock)> lock(m_VectorLock);
 
+			return m_Events.size();
+		}
 	private:
 		GRAVLib::ref<IEventHandleGenerator> m_HandleGenerator;
-		std::vector<eventStorage<bool, T...>> m_Events;
+		std::vector<storage> m_Events;
 
 		Locks::spinLock m_VectorLock;
 	};

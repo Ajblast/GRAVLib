@@ -3,5 +3,4 @@ target_sources(${TargetName}
 		Event.h
 		EventHandle.h
 		IEventHandleGenerator.h
-		SimpleEventHandleGenerator.h
 )

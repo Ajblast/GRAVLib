@@ -3,5 +3,4 @@ target_sources(${TargetName}
 		MultiLock.h
 		ScopedLock.h
 		SpinLock.h
-		STLLocking.h
 )

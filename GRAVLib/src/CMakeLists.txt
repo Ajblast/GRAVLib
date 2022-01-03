@@ -1,2 +1,5 @@
 add_subdirectory(Events)
+add_subdirectory(Memory)
 add_subdirectory(Locks)
+add_subdirectory(Utils)
+add_subdirectory(Random)

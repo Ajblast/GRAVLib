@@ -4,20 +4,25 @@
 
 namespace GRAVLib::Locks
 {
-	template<class LOCK>
+	template<class L>
 	class GRAVLibAPI scopedLock
 	{
-		typedef LOCK lock_t;
-		lock_t* m_pLock;
-
 	public:
-		explicit scopedLock(lock_t& lock) : m_pLock(&lock)
+		explicit scopedLock(L& lock) : m_pLock(&lock)
 		{
 			m_pLock->lock();
 		}
+		scopedLock(const scopedLock& other) = delete;
+		scopedLock(scopedLock&& other) noexcept = delete;
+		scopedLock& operator=(const scopedLock& other) = delete;
+		scopedLock& operator=(scopedLock&& other) noexcept = delete;
+
 		~scopedLock()
 		{
 			m_pLock->unlock();
 		}
+
+	private:
+		L* m_pLock;
 	};
 }

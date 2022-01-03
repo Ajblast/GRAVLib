@@ -7,10 +7,13 @@ namespace GRAVLib::Locks
 {
 	class GRAVLibAPI spinLock
 	{
-		std::atomic_flag m_atomic = ATOMIC_FLAG_INIT;
-
 	public:
-		spinLock() {}
+		spinLock();
+		spinLock(const spinLock& other) = delete;
+		spinLock(spinLock&& other) noexcept = delete;
+		spinLock& operator=(const spinLock& other) = delete;
+		spinLock& operator=(spinLock&& other) noexcept = delete;
+		~spinLock();
 
 		// Try acquire the lock
 		bool try_lock();
@@ -19,5 +22,8 @@ namespace GRAVLib::Locks
 		void lock();
 		// Release the lock
 		void unlock();
+	private:
+		std::atomic_flag m_Atomic;
+
 	};
 }

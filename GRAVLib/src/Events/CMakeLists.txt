@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
 	PUBLIC
 		Event.cpp
-		SimpleEventHandleGenerator.cpp
+		IEventHandleGenerator.cpp
 )
