@@ -100,13 +100,13 @@ namespace GRAVLib::Events
 			return handled;
 		}
 
-		inline void clear()
+		inline void clear() const
 		{
 			Locks::scopedLock<decltype(m_VectorLock)> lock(m_VectorLock);
 
 			m_Events.clear();
 		}
-		inline const size_t size()
+		inline const size_t size() const
 		{
 			Locks::scopedLock<decltype(m_VectorLock)> lock(m_VectorLock);
 
@@ -116,6 +116,6 @@ namespace GRAVLib::Events
 		GRAVLib::ref<IEventHandleGenerator> m_HandleGenerator;
 		std::vector<storage> m_Events;
 
-		Locks::spinLock m_VectorLock;
+		mutable Locks::spinLock m_VectorLock;
 	};
 }
