@@ -19,12 +19,12 @@ namespace GRAVLib::Events
 	};
 
 
-	class EventTest : public ::testing::Test {
+	class Events : public ::testing::Test {
 	public:
-		EventTest() 
+		Events() 
 		{
 		}
-		~EventTest() override
+		~Events() override
 		{
 		}
 	protected:
@@ -43,7 +43,7 @@ namespace GRAVLib::Events
 
 		ref<IEventHandleGenerator> handleGenerator;
 	};
-	TEST_F(EventTest, CanRegisterLambda)
+	TEST_F(Events, CanRegisterLambda)
 	{
 		event sut = event(handleGenerator);
 
@@ -62,7 +62,7 @@ namespace GRAVLib::Events
 	}
 
 	bool freeFunction(bool handled) { return true; }
-	TEST_F(EventTest, CanRegisterFreeFunction)
+	TEST_F(Events, CanRegisterFreeFunction)
 	{
 		event sut = event(handleGenerator);
 
@@ -85,7 +85,7 @@ namespace GRAVLib::Events
 	public:
 		bool memberFunction(bool handled) { return true; }
 	};
-	TEST_F(EventTest, CanRegisterMemberFunction)
+	TEST_F(Events, CanRegisterMemberFunction)
 	{
 		event sut = event(handleGenerator);
 
