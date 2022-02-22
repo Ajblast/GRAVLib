@@ -6,7 +6,9 @@ target_sources(${TargetName}
 )
 
 add_subdirectory(Containers)
+add_subdirectory(Debug)
 add_subdirectory(Events)
+add_subdirectory(IO)
 add_subdirectory(Locks)
 add_subdirectory(Memory)
 add_subdirectory(Random)

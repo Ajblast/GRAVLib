@@ -13,6 +13,7 @@ maketest(${TargetName}Tests ${DynamicRuntime} ${TargetName})
 
 add_subdirectory(Containers)
 add_subdirectory(Events)
+add_subdirectory(IO)
 add_subdirectory(Locks)
 add_subdirectory(Memory)
 add_subdirectory(Random)
