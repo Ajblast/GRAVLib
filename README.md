@@ -1,5 +1,6 @@
 # GRAVLib
 # Description
+GRAVLib is a library of utility functions and classes. The primary example of this usage is in [GRAVEngine](https://github.com/Ajblast/GameEngine)
 # Table of Contents
 [Installation](https://github.com/Ajblast/GRAVLib#installation)
 
