@@ -60,7 +60,7 @@ namespace GRAVLib::IO
 		bool read(scope<char[]>& buffer, size_t bufferSize);
 		// Read a character. Returns eof if it was the end of the file
 		int readChar();
-		// Read the entire file into a buffer. Memory allocated
+		// Read the entire file into a buffer. Memory allocated. Will potentially fail with text if the file is not opened in binary mode because \r\n is turned into \n and the size is different.
 		bool readAll(scope<char[]>& buffer, size_t& bufferSize);
 		#pragma endregion
 

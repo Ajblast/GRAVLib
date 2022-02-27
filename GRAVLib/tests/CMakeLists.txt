@@ -11,6 +11,9 @@ maketest(${TargetName}Tests ${DynamicRuntime} ${TargetName})
 #		randomTests.cpp
 #)
 
+target_compile_definitions(${TargetName}Tests PUBLIC -D${TestName}_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
+
+
 add_subdirectory(Containers)
 add_subdirectory(Events)
 add_subdirectory(IO)

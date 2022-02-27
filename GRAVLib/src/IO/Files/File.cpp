@@ -74,6 +74,9 @@ void GRAVLib::IO::file::close()
 {
 	if (isOpen())
 	{
+		// Reset the state bits because close doesn't clear the bits and previous failures can pass over
+		m_Stream.clear();
+
 		// Close the stream
 		m_Stream.close();
 
@@ -186,11 +189,13 @@ const size_t GRAVLib::IO::file::fileSize()
 		size_t currentPosition = offsetRead();
 
 		// Go the end of the file
-		seekRead(0, seekOrigin::end);
+		if (seekRead(0, seekOrigin::end) == false)
+			throw Exceptions::ioException("Unable to seek read to beginning of file.");
 		fileSize = offsetRead();
 
 		// Return back to the cached position
-		seekRead(currentPosition, seekOrigin::beg);
+		if (seekRead(currentPosition, seekOrigin::beg) == false)
+			throw Exceptions::ioException("Unable to seek to last read position.");
 	}
 	else
 	{
@@ -198,11 +203,13 @@ const size_t GRAVLib::IO::file::fileSize()
 		size_t currentPosition = offsetWrite();
 
 		// Go the end of the file
-		seekWrite(0, seekOrigin::end);
+		if (seekWrite(0, seekOrigin::end) == false)
+			throw Exceptions::ioException("Unable to seek write to beginning of file.");
 		fileSize = offsetWrite();
 
 		// Return back to the cached position
-		seekWrite(currentPosition, seekOrigin::beg);
+		if (seekWrite(currentPosition, seekOrigin::beg) == false)
+			throw Exceptions::ioException("Unable to seek to last write position.");
 	}
 
 	return fileSize;
@@ -280,10 +287,20 @@ bool GRAVLib::IO::file::readAll(scope<char[]>& buffer, size_t& bufferSize)
 	buffer = createScope<char[]>(bufferSize);
 
 	// Seek to the beginning of the file
-	seekRead(0, seekOrigin::beg);
+	if (seekRead(0, seekOrigin::beg) == false)
+		throw Exceptions::ioException("Unable to seek to the beginning of file.");
 
 	// Read into the buffer
-	return read(buffer, bufferSize);
+	bool readResult = read(buffer, bufferSize);
+	bool eof = endOfFile();
+
+	// The entire file was read if read fails and eof is set, or the read result was already true
+	if (readResult)
+		return true;
+	else if (readResult == false && eof)
+		return true;
+	else 
+		return false;
 }
 
 
