@@ -22,7 +22,7 @@ namespace GRAVLib::Time
 
 		EXPECT_TRUE(sut.isRunning()) << "Stopwatch is not running after starting.";
 
-		std::this_thread::sleep_for(Time::milliseconds(10));
+		std::this_thread::sleep_for(Time::milliseconds(2));
 
 		timeDurationCount count = sut.deltaTime().nanoseconds();
 
