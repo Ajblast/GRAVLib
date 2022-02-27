@@ -15,6 +15,7 @@ target_compile_definitions(${TargetName}Tests PUBLIC -D${TestName}_PATH="${CMAKE
 
 
 add_subdirectory(Containers)
+add_subdirectory(Debug)
 add_subdirectory(Events)
 add_subdirectory(IO)
 add_subdirectory(Locks)
