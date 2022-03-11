@@ -59,7 +59,6 @@ bool GRAVLib::IO::textFile::readLine(std::string& str, char delim)
 
 	return true;
 }
-
 bool GRAVLib::IO::textFile::readAll(std::string& str)
 {
 	GRAV_ASSERT_TRUE(isOpen());
@@ -92,26 +91,16 @@ bool GRAVLib::IO::textFile::readAll(std::string& str)
 	return true;
 }
 
-void GRAVLib::IO::textFile::write(const std::string& string)
+void GRAVLib::IO::textFile::write(std::string_view view)
 {
 	// Write the string and the null character
-	file::write(string.c_str(), string.size());
+	file::write(view.data(), view.size());
 }
-void GRAVLib::IO::textFile::writeLine(const std::string& string)
+void GRAVLib::IO::textFile::writeLine(std::string_view string)
 {
-	write(string + '\n');
+	write(string);
+	write("\n");
 }
-//void GRAVLib::IO::textFile::writeLine(const char* string, size_t size)
-//{
-//	// Blocking write the string without the null character
-//	file::write(string, size - 1);
-//
-//	// Blocking write newline character
-//	writeChar('\n');
-//
-//	// Write the null character
-//	writeChar(0);
-//}
 
 bool GRAVLib::IO::textFile::searchForToken(scope<const std::string[]> tokens, size_t tokenCount, size_t byteSearchDepth)
 {

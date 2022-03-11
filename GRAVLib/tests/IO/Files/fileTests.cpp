@@ -37,7 +37,7 @@ namespace GRAVLib::IO
 		File()
 		{
 		}
-		~File() override
+		virtual ~File() override
 		{
 		}
 	protected:

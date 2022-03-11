@@ -1,1 +1,1 @@
-#pragma once
+#include "Debug/Logging/Loggers/LogVerbosity.h"

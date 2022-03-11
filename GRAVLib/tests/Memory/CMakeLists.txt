@@ -1,5 +1,4 @@
-#target_sources(${TestName} 
-#	PUBLIC
-#		
-#)
-#
+target_sources(${TestName} 
+	PUBLIC
+		SingletonTests.cpp
+)

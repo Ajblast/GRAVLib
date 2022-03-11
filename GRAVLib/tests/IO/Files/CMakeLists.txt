@@ -1,6 +1,6 @@
 target_sources(${TestName} 
 	PUBLIC
-		fileModesTests.cpp
-		fileTests.cpp
-		textFileTests.cpp
+		FileModesTests.cpp
+		FileTests.cpp
+		TextFileTests.cpp
 )

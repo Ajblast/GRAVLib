@@ -28,7 +28,7 @@ project(GRAVLib VERSION 1.0 LANGUAGES ${ProjectLanguage})
 if (${ProjectLanguage} STREQUAL CXX)
 	set(CMAKE_C_STANDARD 17)
 	set(CMAKE_C_STANDARD_REQUIRED True)
-	set(CMAKE_CXX_STANDARD 20)
+	set(CMAKE_CXX_STANDARD 23)
 	set(CMAKE_CXX_STANDARD_REQUIRED True)
 endif()
 

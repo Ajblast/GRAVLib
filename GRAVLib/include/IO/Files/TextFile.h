@@ -22,10 +22,10 @@ namespace GRAVLib::IO
 		// Read the entire file into the string
 		bool readAll(std::string& str);
 
-		// Write a string to the file
-		void write(const std::string& string);
+		// Write a string to a file
+		void write(std::string_view string);
 		// Write a string and append a newline character to the end of the string
-		void writeLine(const std::string& string);
+		void writeLine(std::string_view string);
 
 		// Search the header of the file for a specific token.
 		bool searchForToken(scope<const std::string[]> tokens, size_t tokencount, size_t byteSearchDepth = 200);
