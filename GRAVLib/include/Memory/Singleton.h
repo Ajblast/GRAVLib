@@ -12,6 +12,9 @@
 	static singletonType& getInstance() { GRAV_ASSERT_NE(s_Instance, nullptr); return *s_Instance; } \
 	static singletonType* getInstancePtr() {return s_Instance;}
 
+#define GRAVLib_SINGLETON_SET_INSTANCE(singletonType) template<> singletonType* GRAVLib::singleton<singletonType>::s_Instance = nullptr
+
+
 namespace GRAVLib
 {
 	// A singleton is any object that should only every have a single instance. All singletons must implement GRAVLib_SINGLETON_INSTANCE

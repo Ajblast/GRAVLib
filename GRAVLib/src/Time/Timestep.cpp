@@ -19,7 +19,7 @@ GRAVLib::Time::timestep& GRAVLib::Time::timestep::operator=(const timestep& othe
 
 	return *this;
 }
-GRAVLib::Time::timestep& GRAVLib::Time::timestep::operator=(timestep&& other)
+GRAVLib::Time::timestep& GRAVLib::Time::timestep::operator=(timestep&& other) noexcept
 {
 	if (this != &other)
 	{

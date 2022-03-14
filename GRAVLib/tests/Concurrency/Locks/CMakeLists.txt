@@ -1,4 +1,4 @@
-target_sources(${TargetName} 
+target_sources(${TestName} 
 	PUBLIC
-		lockTests.cpp
+		LockTests.cpp
 )

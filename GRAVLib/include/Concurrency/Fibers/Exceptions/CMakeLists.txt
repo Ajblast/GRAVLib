@@ -1,0 +1,9 @@
+target_sources(${TargetName} 
+	PUBLIC
+		FiberCallbackException.h
+		FiberCreationException.h
+		FiberException.h
+		FiberQuitCallbackException.h
+		FiberToThreadException.h
+		FiberSwitchingException.h
+)

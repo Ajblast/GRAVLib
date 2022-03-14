@@ -9,7 +9,19 @@
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "enableProfiling",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "enableConsoleProfiling",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     }
   ]
 }

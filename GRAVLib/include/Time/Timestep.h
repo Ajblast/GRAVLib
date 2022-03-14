@@ -20,7 +20,7 @@ namespace GRAVLib::Time
 		timestep(const timestep& other);
 		timestep(timestep&& other) noexcept;
 		timestep& operator=(const timestep& other);
-		timestep& operator=(timestep&& other);
+		timestep& operator=(timestep&& other) noexcept;
 
 
 		explicit operator double() const noexcept;

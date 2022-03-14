@@ -6,6 +6,7 @@ maketest(${TargetName}Tests ${DynamicRuntime} ${TargetName})
 
 target_compile_definitions(${TargetName}Tests PUBLIC -D${TestName}_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
+add_subdirectory(Concurrency)
 add_subdirectory(Containers)
 add_subdirectory(Debug)
 add_subdirectory(Events)

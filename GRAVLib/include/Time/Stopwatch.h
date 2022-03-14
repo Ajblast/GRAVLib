@@ -25,12 +25,16 @@ namespace GRAVLib::Time
 		void reset() noexcept;
 
 		timestep deltaTime() const noexcept;
+		timePoint startTick() const noexcept;
 
-		inline bool isRunning() { return m_Running; }
+		bool isRunning() const noexcept;
 	private:
 		timePoint m_StartTick;
 		nanoseconds m_StoredDuration;
 
 		bool m_Running;
 	};
+
+	inline bool stopwatch::isRunning() const noexcept { return m_Running; }
+	inline timePoint stopwatch::startTick() const noexcept { return m_StartTick; }
 }

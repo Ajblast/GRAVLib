@@ -3,4 +3,5 @@ target_sources(${TargetName}
 		Assertions.h
 )
 
+add_subdirectory(Instrumentation)
 add_subdirectory(Logging)

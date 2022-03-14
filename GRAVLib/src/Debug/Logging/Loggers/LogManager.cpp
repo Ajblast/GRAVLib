@@ -1,7 +1,7 @@
 #include "Debug/Logging/Loggers/LogManager.h"
 #include "Debug/Logging/Sinks/FileSink.h"
 
-template<> GRAVLib::Debug::Logging::logManager* GRAVLib::singleton<GRAVLib::Debug::Logging::logManager>::s_Instance = nullptr;
+GRAVLib_SINGLETON_SET_INSTANCE(GRAVLib::Debug::Logging::logManager);
 
 GRAVLib::Debug::Logging::logManager::logManager() : 
 	m_Verbosity(logVerbosity::off), m_FlushVerbosity(logVerbosity::off)
@@ -10,7 +10,6 @@ GRAVLib::Debug::Logging::logManager::logManager() :
 GRAVLib::Debug::Logging::logManager::logManager(logVerbosity maximalVerbosity, logVerbosity minimalFlushVerbosity) :
 	m_Verbosity(maximalVerbosity), m_FlushVerbosity(minimalFlushVerbosity)
 {
-	GRAVLib_LOCK_AUTO_MUTEX;
 }
 GRAVLib::Debug::Logging::logManager::~logManager()
 {

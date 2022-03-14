@@ -1,0 +1,9 @@
+target_sources(${TargetName} 
+	PUBLIC
+		FiberCallbackException.cpp
+		FiberCreationException.cpp
+		FiberException.cpp
+		FiberQuitCallbackException.cpp
+		FiberToThreadException.cpp
+		FiberSwitchingException.cpp
+)
