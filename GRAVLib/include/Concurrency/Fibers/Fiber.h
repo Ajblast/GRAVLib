@@ -1,10 +1,11 @@
 #pragma once
 
-#include "GRAVLibCore.h"
 #include "FiberTypes.h"
 #include "FiberID.h"
+#include "GRAVLibCore.h"
 #include <functional>
 #include <format>
+#include <atomic>
 
 namespace GRAVLib::Concurrency::Fibers
 {
@@ -15,8 +16,8 @@ namespace GRAVLib::Concurrency::Fibers
 	{
 	public:
 		// Callback for fiber function
-		typedef std::function<void(fiber*)> fiberCallback;
-		//using fiberCallback = void(*)(fiber*);
+		//typedef std::function<void(fiber*)> fiberCallback;
+		using fiberCallback = void(*)(fiber*);
 	public:
 		fiber();
 		fiber(fiberCallback callback);
@@ -28,11 +29,12 @@ namespace GRAVLib::Concurrency::Fibers
 		~fiber();
 
 
-		void spawn(fiberCallback callback);
-		// Initialize the current thread and make it a fiber
+		// Initialize the current thread and make it a fiber. A fiber created this way must be converted back to a thread.
 		void initializeFromCurrentThread();
 		// Convert the current fiber to a thread
 		void convertToThread();
+		// Close the fiber. WARNING undefined behavior can occur if the fiber has not finished executing and is closed.
+		void close();
 
 		// Switch to a fiber from this current one
 		void switchTo(fiber& fiber);
@@ -43,20 +45,18 @@ namespace GRAVLib::Concurrency::Fibers
 		// Is the current fiber valid
 		const bool valid() const;
 
-		// Get the fiber's index
-		const fiberIndex_t getFiberIndex() const;
-		// Set the fiber's index
-		void setFiberIndex(fiberIndex_t index);
 		// Set the fiber's handle
 		const fiberHandle_t getFiberHandle() const;
 
 		// Get the fiber's name
 		const std::string& name() const;
+		// Set the fiber's name
+		void setName(const std::string& name);
 		#pragma endregion
 
-	private:
-		void close();
+		static fiberID getCurrenterFiberID();
 
+		friend std::formatter<GRAVLib::Concurrency::Fibers::fiber>;
 	private:
 		fiberID m_ID;		// Fiber identifying information
 		std::string m_Name;	// Fiber name
@@ -66,10 +66,17 @@ namespace GRAVLib::Concurrency::Fibers
 
 	inline const fiberID fiber::getID() const { return m_ID; }
 	inline const bool fiber::valid() const { return getID().m_Handle; }
-	inline const fiberIndex_t fiber::getFiberIndex() const { return getID().m_Index; }
-	inline void fiber::setFiberIndex(fiberIndex_t index) { m_ID.m_Index = index; }
 	inline const fiberHandle_t fiber::getFiberHandle() const { return getID().m_Handle; }
 	inline const std::string& fiber::name() const { return m_Name; }
+	inline void fiber::setName(const std::string& name) { m_Name = name; }
+
+
+	struct fiberBundle
+	{
+		fiberID m_Id;						// The fiber's ID
+		std::atomic_bool m_FiberIsSwitched;	// Has the fiber been switch out of and cleaned up
+	};
+
 }
 
 template<>
@@ -81,3 +88,14 @@ struct std::formatter<GRAVLib::Concurrency::Fibers::fiber> : std::formatter<std:
 		return format_to(ctx.out(), "[ID: {} | Name: {} | ThreadFiber: {}]", fiber.m_ID, fiber.m_Name, fiber.m_IsThreadFiber);
 	}
 };
+
+template<>
+struct std::formatter<GRAVLib::Concurrency::Fibers::fiberBundle> : std::formatter<std::string_view>
+{
+	template<typename FormatContext>
+	auto format(const GRAVLib::Concurrency::Fibers::fiberBundle& bundle, FormatContext& ctx)
+	{
+		return format_to(ctx.out(), "[ID: {} | IsFiberSwitched: {}]", bundle.m_Id, bundle.m_FiberIsSwitched);
+	}
+};
+

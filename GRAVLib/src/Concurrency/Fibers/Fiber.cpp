@@ -2,6 +2,7 @@
 #include "Concurrency/Fibers/Exceptions/FiberCreationException.h"
 #include "Concurrency/Fibers/Exceptions/FiberToThreadException.h"
 #include "Concurrency/Fibers/Exceptions/FiberSwitchingException.h"
+#include "Debug/Logging/Logging.h"
 
 #include <format>
 
@@ -22,18 +23,19 @@ GRAVLib::Concurrency::Fibers::fiber::fiber(fiberCallback callback, const std::st
 	m_Name(name), m_IsThreadFiber(false)
 {
 	fiberHandle_t handle;
-	fiberIndex_t index = GRAVLib_INVALID_FIBER_INDEX;
 
 	#if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
 	// Create the fiber with the launching fiber function
-	//handle = (fiberHandle_t)CreateFiber(0, (LPFIBER_START_ROUTINE)callback, this);
-	handle = (fiberHandle_t)CreateFiber(0, (LPFIBER_START_ROUTINE)callback.target<void(fiber*)>(), this);
+	handle = (fiberHandle_t)CreateFiber(0, (LPFIBER_START_ROUTINE)callback, this);
+
+	//auto target = callback.target<void(fiber*)>();
+	//handle = (fiberHandle_t)CreateFiber(0, (LPFIBER_START_ROUTINE)callback.target<void(fiber*)>(), this);
 	#endif
 
 	if (handle == NULL)
 		throw Exceptions::fiberCreationException("Unable to spawn fiber.");
 
-	m_ID = fiberID(handle, index);
+	m_ID = fiberID(handle);
 }
 GRAVLib::Concurrency::Fibers::fiber::fiber(fiber&& other) noexcept
 {
@@ -48,19 +50,24 @@ GRAVLib::Concurrency::Fibers::fiber& GRAVLib::Concurrency::Fibers::fiber::operat
 		if (valid())
 			terminate();
 
-		m_ID = std::move(other.m_ID);
-		m_Name = std::move(other.m_Name);
+		m_ID = std::exchange(other.m_ID, {});
+		m_Name = std::exchange(other.m_Name, {});
 
-		m_IsThreadFiber = std::move(other.m_IsThreadFiber);
+		m_IsThreadFiber = std::exchange(other.m_IsThreadFiber, {});
 	}
 
 	return *this;
 }
 GRAVLib::Concurrency::Fibers::fiber::~fiber()
 {
-	// It is not an error if a fiber object deconstructor is called while the fiber is valid. Unlike threads
+	GRAV_ASSERT_FALSE(valid()); // The current fiber must not be valid to be destructed
+
+	// It is not an error if a fiber object destructor is called while the fiber is valid. Unlike threads
 	if (valid())
+	{
+		GRAVLib_LOG_LINE_CRITICAL("Attempting to call destructor on still valid fiber [{}].", *this);
 		terminate();
+	}
 }
 
 void GRAVLib::Concurrency::Fibers::fiber::initializeFromCurrentThread()
@@ -68,7 +75,6 @@ void GRAVLib::Concurrency::Fibers::fiber::initializeFromCurrentThread()
 	GRAV_ASSERT_FALSE(valid());
 
 	fiberHandle_t handle;
-	fiberIndex_t index = GRAVLib_INVALID_FIBER_INDEX;
 
 	// Convert the thread into a fiber
 	#if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
@@ -76,15 +82,16 @@ void GRAVLib::Concurrency::Fibers::fiber::initializeFromCurrentThread()
 	#endif
 
 	// Was a handle created
-	if (getFiberHandle() == NULL)
+	if (handle == NULL)
 		throw Exceptions::fiberCreationException("Unable to create fiber from current thread.");
 
-	m_ID = fiberID(handle, index);
+	m_ID = fiberID(handle);
 	m_IsThreadFiber = true;
 }
 void GRAVLib::Concurrency::Fibers::fiber::convertToThread()
 {
 	GRAV_ASSERT_TRUE(valid());
+	GRAV_ASSERT_TRUE(m_IsThreadFiber);	// Fiber must be a thread fiber to convert back to a thread
 
 	bool result;
 	#if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
@@ -95,10 +102,11 @@ void GRAVLib::Concurrency::Fibers::fiber::convertToThread()
 	// Was the fiber turned back into a thread
 	if (result == false)
 		throw Exceptions::fiberToThreadException(
-			std::format("Unable to convert the current fiber [{}] into a thread.", name())
+			std::format("Unable to convert the current fiber [{}] into a thread.", *this)
 		);
 
 	m_IsThreadFiber = false;
+	m_ID = fiberID();
 }
 
 void GRAVLib::Concurrency::Fibers::fiber::switchTo(fiber& fiber)
@@ -113,11 +121,9 @@ void GRAVLib::Concurrency::Fibers::fiber::switchTo(fiber& fiber)
 	}
 	catch (...)
 	{
-
 		throw Exceptions::fiberSwitchingException(
-			std::format("Fiber [{}] unable to switch to fiber [{}]", name(), fiber.name())
+			std::format("Fiber [{}] unable to switch to fiber [{}]", *this, fiber)
 		);
-		//GRAVLib_LOG_LINE_CRITICAL("%s: Unable to switch to fiber!!!!", GRAVLib_CLEAN_FUNC_SIG);
 	}
 	#endif
 }
@@ -128,7 +134,7 @@ void GRAVLib::Concurrency::Fibers::fiber::close()
 
 	if (m_IsThreadFiber)
 		throw Exceptions::fiberException(
-			std::format("Attempting to close a fiber [{}] that represents a thread. The fiber must be converted into a thread before it can be closed.", name())
+			std::format("Attempting to close a fiber [{}] that represents a thread. Thread fibers cannot be closed and must instead be converted back to threaeds.", *this)
 		);
 
 	// Delete the system fiber
@@ -138,4 +144,16 @@ void GRAVLib::Concurrency::Fibers::fiber::close()
 
 	// Reset the fiber identifying information
 	m_ID = fiberID();
+}
+GRAVLib::Concurrency::Fibers::fiberID GRAVLib::Concurrency::Fibers::fiber::getCurrenterFiberID()
+{
+	fiberID id;
+
+	// Delete the system fiber
+	#if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
+	id = fiberID(GetCurrentFiber());
+	#endif
+
+	// Reset the fiber identifying information
+	return id;
 }

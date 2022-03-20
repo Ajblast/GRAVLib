@@ -1,9 +1,10 @@
 #pragma once
 
-#include "GRAVLibCore.h"
 #include "ThreadID.h"
 #include "ThreadTypes.h"
 #include "TLS.h"
+
+#include "GRAVLibCore.h"
 
 #include <string>
 #include <functional>
@@ -14,8 +15,9 @@ namespace GRAVLib::Concurrency::Threads
 	class GRAVLibAPI thread
 	{
 	public:
-		typedef std::function<unsigned(thread*)> threadCallback;
-		//using threadCallback = void(*)(thread*);
+		//typedef std::function<unsigned(thread*)> threadCallback;
+
+		using threadCallback = unsigned int(*)(thread*);
 
 	public:
 		thread();
@@ -34,6 +36,9 @@ namespace GRAVLib::Concurrency::Threads
 		void detach();
 		// Get the handle and id from the currently running thread
 		void initializeFromCurrentThread();
+		// Close the thread. WARNING: can lead to undefined behavior
+		void close();
+
 
 		#pragma region Getters
 		// Get the thread local storage
@@ -55,10 +60,6 @@ namespace GRAVLib::Concurrency::Threads
 		threadID_t getThreadID() const;
 		// Get the thread native handle
 		threadHandle_t getThreadHandle() const;
-		// Get the thread index
-		threadIndex_t getThreadIndex() const;
-		// Set the thread index
-		void setThreadIndex(threadIndex_t index);
 
 		// Is the current thread valid
 		bool valid() const;
@@ -66,8 +67,11 @@ namespace GRAVLib::Concurrency::Threads
 
 		// Cause the thread to sleep for so many milliseconds
 		static void sleepFor(uint32 ms);
-	private:
-		void close();
+
+		// Get the current thread ID. Handle is not included because a pseudo handle always points to the "current thread" 
+		static threadID getCurrentThreadID();
+
+		friend std::formatter<GRAVLib::Concurrency::Threads::thread>;
 
 	private:
 		threadID m_ID;				// Thread's ID
@@ -79,8 +83,6 @@ namespace GRAVLib::Concurrency::Threads
 	inline threadID thread::getID() const { return m_ID; }
 	inline threadID_t thread::getThreadID() const { return getID().m_ThreadID; }
 	inline threadHandle_t thread::getThreadHandle() const { return getID().m_Handle; }
-	inline threadIndex_t thread::getThreadIndex() const { return getID().m_Index; }
-	inline void thread::setThreadIndex(threadIndex_t index) { m_ID.m_Index = index; }
 
 	inline bool thread::valid() const { return getThreadID() != GRAVLib_INVALID_THREAD_ID; }
 }
@@ -94,4 +96,3 @@ struct std::formatter<GRAVLib::Concurrency::Threads::thread> : std::formatter<st
 		return format_to(ctx.out(), "[ID: {} | TLS: {}]", thread.m_ID, thread.m_ThreadLocalStorage);
 	}
 };
-

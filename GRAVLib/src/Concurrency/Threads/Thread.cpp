@@ -2,12 +2,15 @@
 #include "Concurrency/Threads/Exceptions/ThreadException.h"
 #include "Concurrency/Threads/Exceptions/ThreadCreationException.h"
 #include "Concurrency/Threads/Exceptions/ThreadAffinityException.h"
+#include "Debug/Logging/Logging.h"
 
 #if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <process.h>
 #endif
+
 
 GRAVLib::Concurrency::Threads::thread::thread() 
 {}
@@ -18,12 +21,8 @@ GRAVLib::Concurrency::Threads::thread::thread(threadCallback callback)
 
 	// Create the thread
 	#if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
-	//handle = reinterpret_cast<void*>(_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)callback, this, 0, (unsigned int*)&id));
-
-	// TODO: Check if a thread is able to be generated with the current std::function type through target
-	handle = reinterpret_cast<void*>(_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)callback.target<unsigned(thread*)>(), this, 0, (unsigned int*)&id));
-
-	//m_ThreadHandle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)callback, this, 0, (DWORD*)&m_ThreadID);
+	handle = reinterpret_cast<void*>(_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)callback, this, 0, (unsigned int*)&id));
+	//handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)callback, this, 0, (DWORD*)&id);
 	#endif
 
 	// Throw an exception if a thread was not able to be created
@@ -31,7 +30,7 @@ GRAVLib::Concurrency::Threads::thread::thread(threadCallback callback)
 		throw GRAVLib::Concurrency::Threads::Exceptions::threadCreationException("Unable to spawn thread.");
 
 	// Set the thread handle and ID
-	m_ID = threadID(id, handle, GRAVLib_INVALID_THREAD_INDEX);
+	m_ID = threadID(id, handle);
 }
 GRAVLib::Concurrency::Threads::thread::thread(threadCallback callback, const std::wstring& name, size_t affinity) : thread(callback)
 {
@@ -52,8 +51,9 @@ GRAVLib::Concurrency::Threads::thread& GRAVLib::Concurrency::Threads::thread::op
 		if (valid())
 			terminate();
 
-		m_ID = std::move(other.m_ID);
-		m_ThreadLocalStorage = std::move(other.m_ThreadLocalStorage);
+		// Because threads shouldn't share information, we just flat out steal the other thread's stuff and set theirs to null
+		m_ID = std::exchange(other.m_ID, {});
+		m_ThreadLocalStorage = std::exchange(other.m_ThreadLocalStorage, {});
 	}
 
 	return *this;
@@ -64,7 +64,10 @@ GRAVLib::Concurrency::Threads::thread::~thread()
 
 	// If the current thread is valid, we are trying delete the object representing the object representing the native handle, which is really bad.
 	if (valid())
+	{
+		GRAVLib_LOG_LINE_CRITICAL("Attempting to call destructor on still valid thread [{}].", *this);
 		terminate();
+	}
 }
 
 
@@ -96,6 +99,18 @@ void GRAVLib::Concurrency::Threads::thread::initializeFromCurrentThread()
 	m_ID.m_Handle = GetCurrentThread();
 	m_ID.m_ThreadID = GetCurrentThreadId();
 	#endif
+}
+void GRAVLib::Concurrency::Threads::thread::close()
+{
+	GRAV_ASSERT_TRUE(valid());
+
+	// Close the handle
+	#if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
+	CloseHandle(getThreadHandle());
+	#endif
+
+	// Clear out the identifying information
+	m_ID = {};
 }
 
 void GRAVLib::Concurrency::Threads::thread::setAffinity(size_t affinity)
@@ -177,16 +192,15 @@ void GRAVLib::Concurrency::Threads::thread::sleepFor(uint32 ms)
 	sleep(ms);
 	#endif
 }
-
-void GRAVLib::Concurrency::Threads::thread::close()
+GRAVLib::Concurrency::Threads::threadID GRAVLib::Concurrency::Threads::thread::getCurrentThreadID()
 {
-	GRAV_ASSERT_TRUE(valid());
+	threadID_t id;
 
 	// Close the handle
 	#if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
-	CloseHandle(getThreadHandle());
+	id = GetCurrentThreadId();
 	#endif
 
 	// Clear out the identifying information
-	m_ID = {};
+	return threadID(id, nullptr);
 }
