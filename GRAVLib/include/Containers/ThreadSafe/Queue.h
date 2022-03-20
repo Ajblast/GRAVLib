@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GRAVLibCore.h"
+#include "Concurrency/Locks/Locks.h"
 #include <queue>
 
 namespace GRAVLib::Containers::ThreadSafe
@@ -31,7 +32,7 @@ namespace GRAVLib::Containers::ThreadSafe
 		const size_t size() const;
 
 		template<typename T>
-		friend bool operator<(const queue<T>& lhs, const queue<T>& rhs);
+		friend bool operator<=>(const queue<T>& lhs, const queue<T>& rhs);
 		template<typename T>
 		friend bool operator==(const queue<T>& lhs, const queue<T>& rhs);
 	private:
@@ -42,10 +43,10 @@ namespace GRAVLib::Containers::ThreadSafe
 
 	#pragma region Constructors
 	template<typename T>
-	queue<T>::queue()
+	inline queue<T>::queue()
 	{}
 	template<typename T>
-	queue<T>::queue(const queue& other) 
+	inline queue<T>::queue(const queue& other) 
 	{
 		GRAVLib_LOCK_LOCKS(GRAVLib_AUTO_MUTEX_NAME, other.GRAVLib_AUTO_MUTEX_NAME);
 
@@ -53,12 +54,12 @@ namespace GRAVLib::Containers::ThreadSafe
 		m_Queue = std::queue<dataType>(other.m_Queue);
 	}
 	template<typename T>
-	queue<T>::queue(queue&& other) noexcept
+	inline queue<T>::queue(queue&& other) noexcept
 	{
 		*this = std::move(other);
 	}
 	template<typename T>
-	queue<T>& queue<T>::operator=(const queue& other)
+	inline queue<T>& queue<T>::operator=(const queue& other)
 	{
 		if (this != &other)
 		{
@@ -70,7 +71,7 @@ namespace GRAVLib::Containers::ThreadSafe
 		return *this;
 	}
 	template<typename T>
-	queue<T>& queue<T>::operator=(queue&& other) noexcept
+	inline queue<T>& queue<T>::operator=(queue&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -82,7 +83,7 @@ namespace GRAVLib::Containers::ThreadSafe
 		return *this;
 	}
 	template<typename T>
-	queue<T>::~queue()
+	inline queue<T>::~queue()
 	{}
 	#pragma endregion
 
@@ -138,31 +139,10 @@ namespace GRAVLib::Containers::ThreadSafe
 		return lhs.m_Queue == rhs.m_Queue;
 	}
 	template<typename T>
-	GRAVLibAPI bool operator!=(const queue<T>& lhs, const queue<T>& rhs)
-	{
-		return !(lhs == rhs);
-	}
-
-	template<typename T>
-	GRAVLibAPI bool operator<(const queue<T>& lhs, const queue<T>& rhs)
+	GRAVLibAPI bool operator<=>(const queue<T>& lhs, const queue<T>& rhs)
 	{
 		GRAVLib_LOCK_LOCKS(lhs.GRAVLib_AUTO_MUTEX_NAME, rhs.GRAVLib_AUTO_MUTEX_NAME);
 
-		return lhs.m_Queue < rhs.m_Queue;
-	}
-	template<typename T>
-	GRAVLibAPI bool operator<=(const queue<T>& lhs, const queue<T>& rhs)
-	{
-		return !(lhs > rhs);
-	}
-	template<typename T>
-	GRAVLibAPI bool operator>(const queue<T>& lhs, const queue<T>& rhs)
-	{
-		return rhs < lhs;
-	}
-	template<typename T>
-	GRAVLibAPI bool operator>=(const queue<T>& lhs, const queue<T>& rhs)
-	{
-		return !(lhs < rhs);
+		return lhs.m_Queue <=> rhs.m_Queue;
 	}
 }
