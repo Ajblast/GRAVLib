@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GRAVLibCore.h"
+#include "LibExportImport.h"
 #include <memory>
 
 namespace GRAVLib

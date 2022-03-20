@@ -1,5 +1,6 @@
 target_sources(${TargetName} 
 	PUBLIC
+		LibExportImport.h
 		GRAVLibCore.h
 		Platform.h
 		Primitives.h
