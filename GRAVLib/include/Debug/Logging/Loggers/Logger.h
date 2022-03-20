@@ -10,6 +10,7 @@
 #include <atomic>
 #include <string>
 #include <vector>
+#include <format>
 
 // TODO: Allow a logger (More like Sinks) to have the capability of having a backlog of message such that message don't have to be logged immediately
 // TODO: For log line, determine if should be using \n or \r\n

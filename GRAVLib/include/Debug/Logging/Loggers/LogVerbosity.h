@@ -2,7 +2,7 @@
 
 #include "GRAVLibCore.h"
 #include <atomic>
-#include <string>
+#include <format>
 
 #define GRAVLib_VERBOSITY_TRACE		0
 #define GRAVLib_VERBOSITY_DEBUG		1
@@ -34,40 +34,43 @@ namespace GRAVLib::Debug::Logging
 	};
 
 	typedef std::atomic<logVerbosity> verbosity_t;
+}
 
-
-	static const std::string verbosityNames[]
+template<>
+struct std::formatter<GRAVLib::Debug::Logging::logVerbosity> : std::formatter<std::string_view>
+{
+	template<typename FormatContext>
+	auto format(const GRAVLib::Debug::Logging::logVerbosity& verbosity, FormatContext& ctx)
 	{
-		GRAVLib_VERBOSITY_STRING_OFF,
-		GRAVLib_VERBOSITY_STRING_CRITICAL,
-		GRAVLib_VERBOSITY_STRING_ERROR,
-		GRAVLib_VERBOSITY_STRING_WARN,
-		GRAVLib_VERBOSITY_STRING_INFO,
-		GRAVLib_VERBOSITY_STRING_DEBUG,
-		GRAVLib_VERBOSITY_STRING_TRACE
-	};
-
-	GRAVLibAPI inline std::string toString(GRAVLib::Debug::Logging::logVerbosity verbosity)
-	{
-		return verbosityNames[static_cast<int>(verbosity)];
-	}
-
-	GRAVLibAPI inline GRAVLib::Debug::Logging::logVerbosity logVerbosityToEnum(const std::string& name)
-	{
-		int level = 0;
-
-		for (auto& levelstr : verbosityNames)
+		std::string verbosityName;
+		switch (priority)
 		{
-			if (levelstr.compare(name))
-				return static_cast<GRAVLib::Debug::Logging::logVerbosity>(level);
-
-			level++;
+		case GRAVLib::Debug::Logging::logVerbosity::off:
+			verbosityName = GRAVLib_VERBOSITY_STRING_OFF;
+			break;
+		case GRAVLib::Debug::Logging::logVerbosity::trace:
+			verbosityName = GRAVLib_VERBOSITY_STRING_TRACE;
+			break;
+		case GRAVLib::Debug::Logging::logVerbosity::debug:
+			verbosityName = GRAVLib_VERBOSITY_STRING_DEBUG;
+			break;
+		case GRAVLib::Debug::Logging::logVerbosity::info:
+			verbosityName = GRAVLib_VERBOSITY_STRING_INFO;
+			break;
+		case GRAVLib::Debug::Logging::logVerbosity::warn:
+			verbosityName = GRAVLib_VERBOSITY_STRING_WARN;
+			break;
+		case GRAVLib::Debug::Logging::logVerbosity::error:
+			verbosityName = GRAVLib_VERBOSITY_STRING_ERROR;
+			break;
+		case GRAVLib::Debug::Logging::logVerbosity::critical:
+			verbosityName = GRAVLib_VERBOSITY_STRING_CRITICAL;
+			break;
+		default:
+			priorityName = "UNKNOWN";
+			break;
 		}
 
-		return GRAVLib::Debug::Logging::logVerbosity::off;
+		return format_to(ctx.out(), "[{}]", verbosityName);
 	}
-	GRAVLibAPI inline GRAVLib::Debug::Logging::logVerbosity logVerbosityToEnum(const char* name)
-	{
-		return logVerbosityToEnum(std::string(name));
-	}
-}
+};

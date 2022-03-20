@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GRAVLibCore.h"
+#include "Concurrency/Locks/Locks.h"
 #include "ISink.h"
 
 namespace GRAVLib::Debug::Logging::Sinks
