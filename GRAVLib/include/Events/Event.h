@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GRAVLibCore.h"
+#include "Concurrency/Locks/Locks.h"
 #include "EventHandle.h"
 #include "IEventHandleGenerator.h"
 
