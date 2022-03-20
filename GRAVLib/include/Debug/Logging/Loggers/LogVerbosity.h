@@ -43,7 +43,7 @@ struct std::formatter<GRAVLib::Debug::Logging::logVerbosity> : std::formatter<st
 	auto format(const GRAVLib::Debug::Logging::logVerbosity& verbosity, FormatContext& ctx)
 	{
 		std::string verbosityName;
-		switch (priority)
+		switch (verbosity)
 		{
 		case GRAVLib::Debug::Logging::logVerbosity::off:
 			verbosityName = GRAVLib_VERBOSITY_STRING_OFF;
@@ -67,7 +67,7 @@ struct std::formatter<GRAVLib::Debug::Logging::logVerbosity> : std::formatter<st
 			verbosityName = GRAVLib_VERBOSITY_STRING_CRITICAL;
 			break;
 		default:
-			priorityName = "UNKNOWN";
+			verbosityName = "UNKNOWN";
 			break;
 		}
 
