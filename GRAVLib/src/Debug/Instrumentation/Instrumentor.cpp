@@ -22,8 +22,7 @@ void GRAVLib::Debug::instrumentor::startSession(const std::string& sessionName, 
 		// Attempting to start a new session while one is in progress.
 		//	End the current session and start a new one
 
-		if (Logging::logManager::getInstancePtr())
-			GRAVLib_LOG_LINE_ERROR("instrumentor::startSession('{}') when session '{}' already open.", sessionName, m_CurrentSession->m_SessionName);
+		GRAVLib_LOG_LINE_ERROR("instrumentor::startSession('{}') when session '{}' already open.", sessionName, m_CurrentSession->m_SessionName);
 
 		// End the current session
 		internalEndSession();
@@ -34,8 +33,7 @@ void GRAVLib::Debug::instrumentor::startSession(const std::string& sessionName, 
 	{
 		m_OutputFile = IO::textFile(filepath, IO::fileMode::OUTPUT | IO::fileMode::TRUNCATE, true);
 
-		if (Logging::logManager::getInstancePtr())
-			GRAVLib_LOG_LINE_INFO("Start instrumentation session '{}'", sessionName);
+		GRAVLib_LOG_LINE_INFO("Start instrumentation session '{}'", sessionName);
 
 		instrumentationSession session = { sessionName };
 		m_CurrentSession = createScope<instrumentationSession>(std::move(session));
@@ -43,8 +41,7 @@ void GRAVLib::Debug::instrumentor::startSession(const std::string& sessionName, 
 	}
 	catch (IO::Exceptions::ioException& e)
 	{
-		if (Logging::logManager::getInstancePtr())
-			GRAVLib_LOG_LINE_ERROR("Instrumentor could not open the results file '{}'", filepath);
+		GRAVLib_LOG_LINE_ERROR("Instrumentor could not open the results file '{}'", filepath);
 	}
 
 }
@@ -87,8 +84,7 @@ void GRAVLib::Debug::instrumentor::internalEndSession()
 
 	if (m_CurrentSession)
 	{
-		if (Logging::logManager::getInstancePtr())
-			GRAVLib_LOG_LINE_INFO("End instrumentation session '{}'", m_CurrentSession->m_SessionName);
+		GRAVLib_LOG_LINE_INFO("End instrumentation session '{}'", m_CurrentSession->m_SessionName);
 
 		// Write the footer and close the file
 		writeSessionFooter();
