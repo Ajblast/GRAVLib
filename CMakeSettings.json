@@ -12,12 +12,12 @@
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "enableProfiling",
+          "name": "GRAVLib_ENABLE_CONSOLE_PROFILING",
           "value": "True",
           "type": "BOOL"
         },
         {
-          "name": "enableConsoleProfiling",
+          "name": "GRAVLib_ENABLE_PROFILING",
           "value": "True",
           "type": "BOOL"
         }

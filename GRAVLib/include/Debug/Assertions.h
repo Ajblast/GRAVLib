@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef NDEBUG
+#ifdef GRAVLib_ASSERTIONS
 	#define debugBreak() __debugbreak()
 
 	#define GRAV_ASSERT_TRUE(expr) \

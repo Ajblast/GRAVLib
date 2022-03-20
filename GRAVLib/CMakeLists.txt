@@ -4,16 +4,38 @@ include(cmake/utils.cmake)
 
 makelib(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/${PROJECT_NAME} SHARED True pch.h ${BuildTests})
 
-option(enableProfiling "Enable Profiler" OFF)
-cmake_dependent_option(enableConsoleProfiling "Enable Console Logging" OFF enableProfiling OFF)
+option(GRAVLib_ENABLE_PROFILING "Enable Profiler" OFF)
+cmake_dependent_option(GRAVLib_ENABLE_CONSOLE_PROFILING "Enable Console Logging" OFF GRAVLib_ENABLE_PROFILING OFF)
 
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_THREAD_LIBRARY=1)
+#GRAVLib Threading Options
+set(GRAVLib_THREAD_LIBRARY_NONE	0)
+set(GRAVLib_THREAD_LIBRARY_STD	1)
+set(GRAVLib_THREAD_LIBRARY_GRAV 2)
+set(GRAVLib_THREAD_LIBRARY_VALUES GRAVLib_THREAD_LIBRARY_NONE GRAVLib_THREAD_LIBRARY_STD GRAVLib_THREAD_LIBRARY_GRAV)
 
-if(enableProfiling)
+set(GRAVLib_THREAD_LIBRARY GRAVLib_THREAD_LIBRARY_GRAV CACHE STRING "Select Threading Library")
+set_property(CACHE GRAVLib_THREAD_LIBRARY PROPERTY STRINGS ${GRAVLib_THREAD_LIBRARY_VALUES})
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_THREAD_LIBRARY_NONE=${GRAVLib_THREAD_LIBRARY_NONE})
+target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_THREAD_LIBRARY_STD=${GRAVLib_THREAD_LIBRARY_STD})
+target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_THREAD_LIBRARY_GRAV=${GRAVLib_THREAD_LIBRARY_GRAV})
+target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_THREAD_LIBRARY=${GRAVLib_THREAD_LIBRARY})
+
+
+#Assertions
+option(GRAVLib_ENALBE_ASSERTIONS "Enable Assertions" ON)
+if(GRAVLib_ENALBE_ASSERTIONS)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_ASSERTIONS)
+endif()
+
+
+
+#Profiling
+if(GRAVLib_ENABLE_PROFILING)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_PROFILE)
 endif()
 
-if(enableProfiling)
+if(GRAVLib_ENABLE_CONSOLE_PROFILING)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_PROFILE_CONSOLE)
 endif()
