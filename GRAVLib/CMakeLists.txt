@@ -24,8 +24,8 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_THREAD_LIBRA
 
 
 #Assertions
-option(GRAVLib_ENALBE_ASSERTIONS "Enable Assertions" ON)
-if(GRAVLib_ENALBE_ASSERTIONS)
+option(GRAVLib_ENABLE_ASSERTIONS "Enable Assertions" ON)
+if(GRAVLib_ENABLE_ASSERTIONS)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -D${PROJECT_NAME}_ASSERTIONS)
 endif()
 
