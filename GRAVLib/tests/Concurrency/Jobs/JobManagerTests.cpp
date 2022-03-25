@@ -1,415 +1,133 @@
-// TODO: Job Manager Tests
+#include "GRAVLibCore.h"
+#include "Concurrency/Jobs/JobManager.h"
+#include "Concurrency/Jobs/JobSystem.h"
+#include "Time/Stopwatch.h"
+#include <gtest/gtest.h>
+#include <format>
+#include <iostream>
 
-//TEST_CLASS(jobManager)
-//{
-//public:
-//	TEST_METHOD_INITIALIZE(canStartUp);
-//	TEST_METHOD_CLEANUP(canShutdown);
-//
-//	TEST_METHOD(canKickJob);
-//	TEST_METHOD(canKickJobWithCounter);
-//	TEST_METHOD(canKickJobs);
-//	TEST_METHOD(canKickJobsWithCounter);
-//
-//	TEST_METHOD(canWaitForJob);
-//	TEST_METHOD(canWaitForJobs);
-//	TEST_METHOD(canWaitForMultipleCounters);
-//
-//private:
-//	inline void checkManagers() const
-//	{
-//		if (m_LogManager.isValid() == false)
-//			Assert::Fail(L"Log Manager invalid");
-//		else if (m_JobManager.isValid() == false)
-//			Assert::Fail(L"Job Manager invalid");
-//	}
-//private:
-//	GRAVEngine::Jobs::jobManager m_JobManager;
-//	GRAVEngine::Jobs::jobManagerOptions m_Options;
-//	size_t m_JobCount = 10;
-//	GRAVEngine::Logging::logManager m_LogManager;
-//};
-//
-//TEST_CLASS(jobManagerSingleThreaded)
-//{
-//public:
-//	TEST_METHOD_INITIALIZE(canStartUp);
-//	TEST_METHOD_CLEANUP(canShutdown);
-//
-//	TEST_METHOD(canKickJob);
-//	TEST_METHOD(canKickJobWithCounter);
-//	TEST_METHOD(canKickJobs);
-//	TEST_METHOD(canKickJobsWithCounter);
-//
-//	TEST_METHOD(canWaitForJob);
-//	TEST_METHOD(canWaitForJobs);
-//	TEST_METHOD(canWaitForMultipleCounters);
-//
-//private:
-//	inline void checkManagers() const
-//	{
-//		if (m_LogManager.isValid() == false)
-//			Assert::Fail(L"Log Manager invalid");
-//		else if (m_JobManager.isValid() == false)
-//			Assert::Fail(L"Job Manager invalid");
-//	}
-//
-//private:
-//	GRAVEngine::Jobs::jobManager m_JobManager;
-//	GRAVEngine::Jobs::jobManagerOptions m_Options;
-//	size_t m_JobCount = 10;
-//	GRAVEngine::Logging::logManager m_LogManager;
-//};
+namespace GRAVLib::Concurrency::Jobs
+{
+	class JobManager : public ::testing::Test {
+	public:
+		JobManager()
+		{
+		}
+		~JobManager() override
+		{
+		}
+	protected:
+		void SetUp() override
+		{
+			m_DummyJobCount.store(0, std::memory_order_release);
 
-//GRAV_JOB_ENTRY_POINT(dummyJob) {}
-//GRAV_JOB_ENTRY_POINT(dummyWaitJob)
-//{
-//	GRAVEngine::Jobs::gravThread::sleepFor(5);
-//	std::stringstream ss;
-//	ss << param << ": Finish Waiting" << std::endl;
-//	Logger::WriteMessage(ss.str().c_str());
-//}
-//
-//void GRAVCore::Jobs::jobManager::canStartUp()
-//{
-//	// Startup the log manager
-//	auto coutSink = GRAVEngine::createRef<GRAVEngine::Logging::Sinks::ostreamSink>(std::cout, true);
-//	GRAVEngine::Logging::logger logger = GRAVEngine::Logging::logger("Default", { coutSink });
-//	logger.setVerbosity(GRAVEngine::Logging::verbosity::trace);
-//	logger.setFlushVerbosity(GRAVEngine::Logging::verbosity::trace);
-//	m_LogManager.startUp(GRAVEngine::createRef<GRAVEngine::Logging::logger>(logger));
-//
-//	m_Options = GRAVEngine::Jobs::jobManagerOptions();
-//	m_JobManager.startUp(m_Options);
-//}
-//void GRAVCore::Jobs::jobManager::canShutdown()
-//{
-//	GRAVEngine::Jobs::jobManager::getInstance()->shutDown();
-//	GRAVEngine::Logging::logManager::getInstance()->shutDown();
-//}
-//
-//
-//void GRAVCore::Jobs::jobManager::canKickJob()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		GRAVEngine::Jobs::declaration job = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//		m_JobManager.kickJob(job);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick job as queue was full");
-//	}
-//}
-//void GRAVCore::Jobs::jobManager::canKickJobWithCounter()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		GRAVEngine::Jobs::declaration job = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJob(job, &counter);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick job as queue was full");
-//	}
-//}
-//void GRAVCore::Jobs::jobManager::canKickJobs()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		size_t m_JobCount = 50;
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//}
-//void GRAVCore::Jobs::jobManager::canKickJobsWithCounter()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//}
-//
-//void GRAVCore::Jobs::jobManager::canWaitForJob()
-//{
-//	checkManagers();
-//
-//	GRAVEngine::Time::stopwatch sp;
-//	try
-//	{
-//		sp.start();
-//		GRAVEngine::Jobs::declaration job = { dummyWaitJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJob(job, &counter);
-//
-//		m_JobManager.waitForCounter(counter, 0);
-//		sp.pause();
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		sp.pause();
-//		Assert::Fail(L"Couldn't kick job as queue was full");
-//	}
-//
-//	std::stringstream ss;
-//	ss << "Wait Job Time: " << sp.elapsedMilliseconds();
-//
-//	Logger::WriteMessage(ss.str().c_str());
-//}
-//void GRAVCore::Jobs::jobManager::canWaitForJobs()
-//{
-//	checkManagers();
-//
-//	GRAVEngine::Time::stopwatch sp;
-//	try
-//	{
-//		sp.start();
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyWaitJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter);
-//		sp.pause();
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		sp.pause();
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//
-//	std::stringstream ss;
-//	ss << "Wait Jobs Time: " << sp.elapsedMilliseconds();
-//
-//	Logger::WriteMessage(ss.str().c_str());
-//}
-//void GRAVCore::Jobs::jobManager::canWaitForMultipleCounters()
-//{
-//	checkManagers();
-//
-//	GRAVEngine::Time::stopwatch sp;
-//	try
-//	{
-//		sp.start();
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyWaitJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter2;
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter);
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter2);
-//
-//		m_JobManager.waitForCounter(counter, 0);
-//		m_JobManager.waitForCounter(counter2, 0);
-//		sp.pause();
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		sp.pause();
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//
-//	std::stringstream ss;
-//	ss << "Wait Multiple Counters Time: " << sp.elapsedMilliseconds();
-//
-//	Logger::WriteMessage(ss.str().c_str());
-//}
-//
-//
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canStartUp()
-//{
-//	// Startup the log manager
-//	auto coutSink = GRAVEngine::createRef<GRAVEngine::Logging::Sinks::ostreamSink>(std::cout, true);
-//	GRAVEngine::Logging::logger logger = GRAVEngine::Logging::logger("Default", { coutSink });
-//	logger.setVerbosity(GRAVEngine::Logging::verbosity::trace);
-//	logger.setFlushVerbosity(GRAVEngine::Logging::verbosity::trace);
-//	m_LogManager.startUp(GRAVEngine::createRef<GRAVEngine::Logging::logger>(logger));
-//
-//	m_Options = GRAVEngine::Jobs::jobManagerOptions();
-//	m_Options.m_NumThreads = 1;
-//
-//	m_JobManager.startUp(m_Options);
-//}
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canShutdown()
-//{
-//	GRAVEngine::Jobs::jobManager::getInstance()->shutDown();
-//	GRAVEngine::Logging::logManager::getInstance()->shutDown();
-//}
-//
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canKickJob()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		GRAVEngine::Jobs::declaration job = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//		m_JobManager.kickJob(job);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick job as queue was full");
-//	}
-//}
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canKickJobWithCounter()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		GRAVEngine::Jobs::declaration job = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJob(job, &counter);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick job as queue was full");
-//	}
-//}
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canKickJobs()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//}
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canKickJobsWithCounter()
-//{
-//	checkManagers();
-//
-//	try
-//	{
-//		size_t m_JobCount = 50;
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter);
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//}
-//
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canWaitForJob()
-//{
-//	checkManagers();
-//
-//	GRAVEngine::Time::stopwatch sp;
-//	try
-//	{
-//		sp.start();
-//		GRAVEngine::Jobs::declaration job = { dummyWaitJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJob(job, &counter);
-//
-//		m_JobManager.waitForCounter(counter, 0);
-//		sp.pause();
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		sp.pause();
-//		Assert::Fail(L"Couldn't kick job as queue was full");
-//	}
-//
-//	std::stringstream ss;
-//	ss << "Single Threaded Wait Job Time: " << sp.elapsedMilliseconds();
-//
-//	Logger::WriteMessage(ss.str().c_str());
-//}
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canWaitForJobs()
-//{
-//	checkManagers();
-//
-//	GRAVEngine::Time::stopwatch sp;
-//	try
-//	{
-//		sp.start();
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyWaitJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter);
-//		sp.pause();
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		sp.pause();
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//
-//	std::stringstream ss;
-//	ss << "Single Threaded Wait Jobs Time: " << sp.elapsedMilliseconds();
-//
-//	Logger::WriteMessage(ss.str().c_str());
-//}
-//void GRAVCore::Jobs::jobManagerSingleThreaded::canWaitForMultipleCounters()
-//{
-//	checkManagers();
-//
-//	GRAVEngine::Time::stopwatch sp;
-//	try
-//	{
-//		sp.start();
-//		GRAVEngine::scope<GRAVEngine::Jobs::declaration[]> jobs = GRAVEngine::createScope<GRAVEngine::Jobs::declaration[]>(m_JobCount);
-//		for (size_t i = 0; i < m_JobCount; i++)
-//			jobs[i] = { dummyWaitJob, 0, GRAVEngine::Jobs::jobPriority::NORMAL };
-//
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter;
-//		GRAVEngine::ref<GRAVEngine::Jobs::counter> counter2;
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter);
-//		m_JobManager.kickJobs(jobs.get(), m_JobCount, &counter2);
-//
-//		m_JobManager.waitForCounter(counter, 0);
-//		m_JobManager.waitForCounter(counter, 0);
-//		sp.pause();
-//	}
-//	catch (const GRAVEngine::Exceptions::jobQueueFullException& e)
-//	{
-//		sp.pause();
-//		Assert::Fail(L"Couldn't kick jobs as queue was full");
-//	}
-//
-//	std::stringstream ss;
-//	ss << "Single Threaded Wait Multiple Counters Time: " << sp.elapsedMilliseconds();
-//
-//	Logger::WriteMessage(ss.str().c_str());
-//}
+			// Manually check the job manager to make sure it isn't valid
+			ASSERT_EQ(jobManager::getInstancePtr(), nullptr) << "Job manager was valid while setting up test.";
+
+			jobManagerOptions options;
+			options.m_NumThreads = m_ThreadCount;
+			options.m_NumFibers = m_FiberCount;
+
+			m_SUT = createScope<jobManager>(options);
+
+			// Assert that the job manager was created properly
+			ASSERT_TRUE(m_SUT->isValid()) << "Job manager was not valid after initialization.";
+			ASSERT_FALSE(m_SUT->isShuttingDown()) << "Job manager was shutting down immediately after initialization.";
+			ASSERT_NE(m_SUT->getInstancePtr(), nullptr) << "Job manager pointer was null after initialization.";
+			EXPECT_EQ(m_SUT->getNumThreads(), m_ThreadCount) << "Job manager thread count was not set properly.";
+			EXPECT_EQ(m_SUT->getNumFibers(), m_FiberCount + m_ThreadCount)  << "Job manager fiber count was not set properly.";
+		}
+		void TearDown() override
+		{
+			// Reset the job manager to a new state
+			m_SUT.reset();
+
+			// Manually check the job manager to make sure it has shutdown
+			EXPECT_EQ(jobManager::getInstancePtr(), nullptr) << "Job manager instance was still set after destructing.";
+			if (jobManager::getInstancePtr())
+				EXPECT_FALSE(jobManager::getInstance().isValid()) << "While expecting the job manager to have a null pointer, it also was still valid.";
+
+		}
+
+		GRAVLib_JOB_ENTRY_POINT(dummyWaitJob)
+		{
+			Threads::thread::sleepFor(m_WaitTime);
+
+			m_DummyJobCount.fetch_add(1, std::memory_order_acq_rel);
+		}
+
+		std::atomic<int> m_DummyJobCount = 0;
+
+		scope<jobManager> m_SUT;
+		Threads::threadIndex_t m_ThreadCount = 1;
+		Fibers::fiberIndex_t m_FiberCount = 64;
+		size_t m_JobCount = 10;
+		size_t m_WaitTime = 3;
+	};
+
+	TEST_F(JobManager, CanWaitForJob)
+	{
+		Time::stopwatch sp;
+
+		declaration job = { GRAVLib_BIND_FN(dummyWaitJob), 0, jobPriority::NORMAL };
+		ref<counter> counter;
+		
+		sp.start();
+		GRAVLib_KICK_JOB(job, &counter);
+		EXPECT_EQ(counter->getValue(), 1) << "Job counter not equal to number of jobs.";
+
+		GRAVLib_WAIT_COUNTER(counter, 0);
+		sp.pause();
+
+		// Wait job should be 5ms or more
+		EXPECT_TRUE(sp.deltaTime().milliseconds() >= m_WaitTime) << "Waiting for the job didn't take enough time.";
+		EXPECT_EQ(m_DummyJobCount.load(std::memory_order_acquire), 1) << "Amount of finished jobs didn't match job count.";
+	}
+	TEST_F(JobManager, CanWaitForJobs)
+	{
+		Time::stopwatch sp;
+
+		scope<declaration[]> jobs = createScope<declaration[]>(m_JobCount);
+		for (size_t i = 0; i < m_JobCount; i++)
+			jobs[i] = { GRAVLib_BIND_FN(dummyWaitJob), 0, jobPriority::NORMAL };
+		ref<counter> counter;
+
+		sp.start();
+		GRAVLib_KICK_JOBS(jobs, m_JobCount, &counter);
+		EXPECT_EQ(counter->getValue(), m_JobCount) << "Job counter not equal to number of jobs.";
+
+		GRAVLib_WAIT_COUNTER(counter, 0);
+		sp.pause();
+
+		// Wait job should be 5ms or more per job
+		EXPECT_TRUE(sp.deltaTime().milliseconds() >= m_WaitTime * m_JobCount) << "Waiting for the job didn't take enough time.";
+		EXPECT_EQ(m_DummyJobCount.load(std::memory_order_acquire), m_JobCount) << "Amount of finished jobs didn't match job count.";
+	}
+	TEST_F(JobManager, CanWaitForMultipleCounters) 
+	{
+		Time::stopwatch sp;
+
+		scope<declaration[]> jobs = createScope<declaration[]>(m_JobCount);
+		for (size_t i = 0; i < m_JobCount; i++)
+			jobs[i] = { GRAVLib_BIND_FN(dummyWaitJob), 0, jobPriority::NORMAL };
+
+		ref<counter> counter1;
+		ref<counter> counter2;
+
+		sp.start();
+		GRAVLib_KICK_JOBS(jobs, m_JobCount, &counter1);
+		GRAVLib_KICK_JOBS(jobs, m_JobCount, &counter2);
+		EXPECT_EQ(counter1->getValue(), m_JobCount) << "Job counter not equal to number of jobs.";
+		EXPECT_EQ(counter2->getValue(), m_JobCount) << "Job counter not equal to number of jobs.";
+
+		GRAVLib_WAIT_COUNTER(counter1, 0);
+		GRAVLib_WAIT_COUNTER(counter2, 0);
+		sp.pause();
+
+		// Wait job should be 5ms or more per job
+		EXPECT_TRUE(sp.deltaTime().milliseconds() >= m_WaitTime * m_JobCount) << "Waiting for the job didn't take enough time.";
+		EXPECT_EQ(m_DummyJobCount.load(std::memory_order_acquire), m_JobCount * 2) << "Amount of finished jobs didn't match job count.";
+	}
+
+	// TODO: JobManagerCallback Tests
+}
