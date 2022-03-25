@@ -113,35 +113,7 @@ namespace GRAVLib::Debug::Logging
 	template<typename... Args>
 	void GRAVLib::Debug::Logging::logger::logLine(logVerbosity verbosity, const std::string& format, Args&&... args)
 	{
-		bool logEnabled = shouldLog(verbosity);
-
-		if (logEnabled == false)
-			return;
-
-		try
-		{
-			// Format the string
-			std::string formattedString = std::vformat(format, std::make_format_args(std::forward<Args>(args)...)) + "\n";
-
-			// Create the message
-			logMessage msg = logMessage(name(), this->verbosity(), formattedString);
-
-			logMessage_(msg, logEnabled);
-		}
-		catch (std::format_error)
-		{
-			// TODO: Create custom format exception
-			throw;
-		}
-		catch (std::bad_alloc)
-		{
-			// TODO: Create custom bad allocation exception
-			throw;
-		}
-		catch (std::exception)
-		{
-			throw;
-		}
+		log(verbosity, format + "\n", args...);
 	}
 
 
