@@ -24,4 +24,5 @@
 
 
 // The GRAVLib job mutex is a mutex that can be used within a job
-#define GRAVLib_JOB_MUTEX(name)
+#define GRAVLib_JOB_MUTEX(name) throw
+// TODO: Implement job lock
