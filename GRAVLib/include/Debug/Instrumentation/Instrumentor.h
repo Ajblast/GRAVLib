@@ -2,6 +2,8 @@
 
 #include "GRAVLibCore.h" 
 #include "Memory/Singleton.h"
+#include "Concurrency/Threads/ThreadID.h"
+#include "Concurrency/Locks/Locks.h"
 
 #include "Time/Durations.h"
 #include "Time/Stopwatch.h"
@@ -17,7 +19,7 @@ namespace GRAVLib::Debug
 
 		Time::microseconds m_StartPoint;
 		Time::microseconds m_ElapsedDuration;
-		Jobs::threadID m_ThreadID;
+		Concurrency::Threads::threadID m_ThreadID;
 
 		// TODO: Total memory used
 		// TODO: Memory allocated
@@ -30,16 +32,15 @@ namespace GRAVLib::Debug
 		std::string m_SessionName;
 	};
 
-	class GRAVLibAPI instrumentor : singleton<instrumentor>
+	class GRAVLibAPI instrumentor : public singleton<instrumentor>
 	{
 	public:
 		instrumentor();
-		virtual ~instrumentor();
-
 		instrumentor(const instrumentor& other) = delete;
 		instrumentor(instrumentor&& other) noexcept = delete;
 		instrumentor& operator=(const instrumentor& other) = delete;
 		instrumentor& operator=(instrumentor&& other) noexcept = delete;
+		virtual ~instrumentor();
 
 		void startSession(const std::string& sessionName, const std::string& filepath);
 		void endSession();
@@ -78,8 +79,9 @@ namespace GRAVLib::Debug
 #define GRAVLib_PROFILE_END_SESSION() GRAVLib::Debug::instrumentor::getInstance().endSession()
 
 #if GRAVLib_PROFILE_CONSOLE
+#include "Debug/Logging/Logging.h"
 #define GRAVLib_PROFILE_SCOPE_LINE2(name, line) GRAVLib::Debug::instrumentorStopwatch GRAVLib_ANONYMOUS_VARIABLE(stopwatch) (name);\
-												 if (GRAVLib::Debug::Logging::logManager::getInstancePtr()) GRAVLib_LOG_LINE_TRACE("Profile Function: {}", name)
+												GRAVLib_LOG_LINE_TRACE("Profile Function: {}", name)
 #else
 #define GRAVLib_PROFILE_SCOPE_LINE2(name, line) GRAVLib::Debug::instrumentorStopwatch GRAVLib_ANONYMOUS_VARIABLE(stopwatch) (name);
 #endif

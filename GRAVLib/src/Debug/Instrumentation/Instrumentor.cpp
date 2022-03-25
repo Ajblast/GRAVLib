@@ -1,10 +1,12 @@
 #include "Debug/Instrumentation/Instrumentor.h"
+#include "Concurrency/Threads/Thread.h"
 #include "IO/Exceptions/IOException.h"
+#include <format>
 
 GRAVLib_SINGLETON_SET_INSTANCE(GRAVLib::Debug::instrumentor);
 
 GRAVLib::Debug::instrumentor::instrumentor() : 
-	m_CurrentSession(nullptr) 
+	singleton(), m_CurrentSession(nullptr) 
 {}
 GRAVLib::Debug::instrumentor::~instrumentor()
 {
@@ -70,7 +72,7 @@ void GRAVLib::Debug::instrumentor::writeProfile(const profileResult& result)
 		json << "\"name\":\"" << result.m_ProfileName << "\",";
 		json << "\"ph\":\"X\",";
 		json << "\"pid\":0,";
-		json << "\"tid\":" << result.m_ThreadID << ",";
+		json << "\"tid\":" << result.m_ThreadID.m_ThreadID << ",";
 		json << "\"ts\":" << startPoint;
 		json << "}";
 
@@ -131,6 +133,6 @@ void GRAVLib::Debug::instrumentorStopwatch::stop()
 			m_Name,
 			Time::microseconds(stopwatch.startTick().time_since_epoch()),
 			stopwatch.deltaTime().elapsedMicrosecondsDuration(),
-			GRAVLib::Jobs::jobManager::getInstance() == nullptr ? UINT8_MAX : GRAVEngine::Jobs::jobManager::getInstance()->getCurrentThreadIndex()
+			GRAVLib::Concurrency::Threads::thread::getCurrentThreadID()
 			});
 }
