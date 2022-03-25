@@ -4,5 +4,9 @@ target_sources(${TargetName}
 		Declaration.h
 		JobManager.h
 		JobManagerCallbacks.h
+		JobManagerOptions.h
 		JobPriority.h
+		JobSystem.h
 )
+
+add_subdirectory(Exceptions)

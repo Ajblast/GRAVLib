@@ -4,5 +4,8 @@ target_sources(${TargetName}
 		Declaration.cpp
 		JobManager.cpp
 		JobManagerCallbacks.cpp
+		JobManagerOptions.cpp
 		JobPriority.cpp
 )
+
+add_subdirectory(Exceptions)

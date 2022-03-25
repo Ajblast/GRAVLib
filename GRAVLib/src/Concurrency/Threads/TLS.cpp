@@ -13,10 +13,6 @@ GRAVLib::Concurrency::Threads::tls& GRAVLib::Concurrency::Threads::tls::operator
 	{
 		m_Fiber = std::move(other.m_Fiber);
 		m_CurrentFiber = std::move(other.m_CurrentFiber);
-
-		m_PreviousFiberID = std::move(other.m_PreviousFiberID);
-		m_PreviousFiberStored = std::move(other.m_PreviousFiberStored);
-		m_PreviousFiberDestination = std::move(other.m_PreviousFiberDestination);
 	}
 
 	return *this;

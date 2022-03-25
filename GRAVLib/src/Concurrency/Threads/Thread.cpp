@@ -11,6 +11,8 @@
 #include <process.h>
 #endif
 
+#include <thread>
+
 
 GRAVLib::Concurrency::Threads::thread::thread() 
 {}
@@ -32,9 +34,12 @@ GRAVLib::Concurrency::Threads::thread::thread(threadCallback callback)
 	// Set the thread handle and ID
 	m_ID = threadID(id, handle);
 }
-GRAVLib::Concurrency::Threads::thread::thread(threadCallback callback, const std::wstring& name, size_t affinity) : thread(callback)
+GRAVLib::Concurrency::Threads::thread::thread(threadCallback callback, const std::wstring& name) : thread(callback)
 {
 	setName(name);
+}
+GRAVLib::Concurrency::Threads::thread::thread(threadCallback callback, const std::wstring& name, size_t affinity) : thread(callback, name)
+{
 	setAffinity(affinity);
 }
 GRAVLib::Concurrency::Threads::thread::thread(thread&& other) noexcept
@@ -203,4 +208,8 @@ GRAVLib::Concurrency::Threads::threadID GRAVLib::Concurrency::Threads::thread::g
 
 	// Clear out the identifying information
 	return threadID(id, nullptr);
+}
+GRAVLib::uint32 GRAVLib::Concurrency::Threads::thread::getHardwareConcurrency()
+{
+	return std::thread::hardware_concurrency();
 }

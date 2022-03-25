@@ -1,10 +1,10 @@
 #pragma once
 
+#include "GRAVLibCore.h"
 #include "ThreadID.h"
 #include "ThreadTypes.h"
 #include "TLS.h"
 
-#include "GRAVLibCore.h"
 
 #include <string>
 #include <functional>
@@ -22,6 +22,7 @@ namespace GRAVLib::Concurrency::Threads
 	public:
 		thread();
 		thread(threadCallback callback);
+		thread(threadCallback callback, const std::wstring& name);
 		thread(threadCallback callback, const std::wstring& name, size_t affinity);
 		thread(const thread& other) = delete;
 		thread(thread&& other) noexcept;
@@ -70,6 +71,8 @@ namespace GRAVLib::Concurrency::Threads
 
 		// Get the current thread ID. Handle is not included because a pseudo handle always points to the "current thread" 
 		static threadID getCurrentThreadID();
+		// Get the number of cores there are
+		static uint32 getHardwareConcurrency();
 
 		friend std::formatter<GRAVLib::Concurrency::Threads::thread>;
 

@@ -29,19 +29,13 @@ namespace GRAVLib::Concurrency::Threads
 
 		// The thread's personal starting fiber that is outside of the fiber pool.
 		// This is used to start fiber's into the fiber pool, and allows the fiber pool to return back to the calling thread callback after execution ends
-		Fibers::fiber m_Fiber;
+		Fibers::fiberID m_Fiber;
 
 
 		// Current fiber
 		Fibers::fiberID m_CurrentFiber;
 		// Previous thread fiber
-		Fibers::fiberID m_PreviousFiberID;
-		//uint16 m_PreviousFiberIndex = UINT16_MAX;
-		std::atomic_bool* m_PreviousFiberStored = nullptr;
-
-
-		// Where was the previous fiber going to be placed
-		fiberDestination m_PreviousFiberDestination = fiberDestination::NONE;
+		//Fibers::fiberID m_PreviousFiberID;
 	};
 }
 
@@ -51,8 +45,8 @@ struct std::formatter<GRAVLib::Concurrency::Threads::tls> : std::formatter<std::
 	template<typename FormatContext>
 	auto format(const GRAVLib::Concurrency::Threads::tls& tls, FormatContext& ctx)
 	{
-		return format_to(ctx.out(), "[Fiber: {} | CurrentFiberID: {} | PreviousFiberID: {} | PreviousFiberStored: {} | PreviousFiberDestination: {}]", 
-			tls.m_Fiber, tls.m_CurrentFiber, tls.m_PreviousFiberID, tls.m_PreviousFiberStored == nullptr ? "NULL" : tls.m_PreviousFiberStored->load(std::memory_order_acquire), tls.m_PreviousFiberDestination);
+		return format_to(ctx.out(), "[Fiber: {} | CurrentFiberID: {} | PreviousFiberID: {}]", 
+			tls.m_Fiber, tls.m_CurrentFiber);
 	}
 };
 

@@ -4,6 +4,7 @@
 #include "ThreadTypes.h"
 #include <compare>
 #include <format>
+#include <functional>
 
 namespace GRAVLib::Concurrency::Threads
 {
@@ -19,12 +20,11 @@ namespace GRAVLib::Concurrency::Threads
 
 	inline bool operator==(const threadID& lhs, const threadID& rhs) noexcept
 	{
-		return lhs.m_ThreadID == rhs.m_ThreadID && lhs.m_Handle == rhs.m_Handle;
+		// ThreadIDs are only checked by the actual internal id instead without handles because pseudo handles can be given
+		return lhs.m_ThreadID == rhs.m_ThreadID;
 	}
 	inline std::strong_ordering operator<=>(const threadID& lhs, const threadID& rhs) noexcept
 	{
-		if (auto cmp = lhs.m_Handle <=> rhs.m_Handle; cmp != 0) return cmp;
-
 		return lhs.m_ThreadID <=> rhs.m_ThreadID;
 	}
 }
@@ -36,5 +36,15 @@ struct std::formatter<GRAVLib::Concurrency::Threads::threadID> : std::formatter<
 	auto format(const GRAVLib::Concurrency::Threads::threadID& id, FormatContext& ctx)
 	{
 		return format_to(ctx.out(), "[ThreadID: {} | Handle: {}]", id.m_ThreadID, id.m_Handle);
+	}
+};
+
+template<>
+struct std::hash<GRAVLib::Concurrency::Threads::threadID>
+{
+	size_t operator()(const GRAVLib::Concurrency::Threads::threadID& id) const
+	{
+		// Hash doesn't include native handle
+		return std::hash<GRAVLib::Concurrency::Threads::threadID_t>()(id.m_ThreadID);
 	}
 };
