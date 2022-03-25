@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GRAVLibCore.h"
+#include "Debug/Assertions.h"
 
 #if GRAVLib_COMPILER == GRAVLib_COMPILER_MSVC
 #   pragma warning (push)
