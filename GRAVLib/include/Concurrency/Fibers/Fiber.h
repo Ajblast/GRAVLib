@@ -1,8 +1,8 @@
 #pragma once
 
+#include "GRAVLibCore.h"
 #include "FiberTypes.h"
 #include "FiberID.h"
-#include "GRAVLibCore.h"
 #include <functional>
 #include <format>
 #include <atomic>
@@ -69,14 +69,6 @@ namespace GRAVLib::Concurrency::Fibers
 	inline const fiberHandle_t fiber::getFiberHandle() const { return getID().m_Handle; }
 	inline const std::string& fiber::name() const { return m_Name; }
 	inline void fiber::setName(const std::string& name) { m_Name = name; }
-
-
-	struct fiberBundle
-	{
-		fiberID m_Id;						// The fiber's ID
-		std::atomic_bool m_FiberIsSwitched;	// Has the fiber been switch out of and cleaned up
-	};
-
 }
 
 template<>
@@ -86,16 +78,6 @@ struct std::formatter<GRAVLib::Concurrency::Fibers::fiber> : std::formatter<std:
 	auto format(const GRAVLib::Concurrency::Fibers::fiber& fiber, FormatContext& ctx)
 	{
 		return format_to(ctx.out(), "[ID: {} | Name: {} | ThreadFiber: {}]", fiber.m_ID, fiber.m_Name, fiber.m_IsThreadFiber);
-	}
-};
-
-template<>
-struct std::formatter<GRAVLib::Concurrency::Fibers::fiberBundle> : std::formatter<std::string_view>
-{
-	template<typename FormatContext>
-	auto format(const GRAVLib::Concurrency::Fibers::fiberBundle& bundle, FormatContext& ctx)
-	{
-		return format_to(ctx.out(), "[ID: {} | IsFiberSwitched: {}]", bundle.m_Id, bundle.m_FiberIsSwitched);
 	}
 };
 
