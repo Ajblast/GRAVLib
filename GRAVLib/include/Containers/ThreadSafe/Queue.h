@@ -26,7 +26,7 @@ namespace GRAVLib::Containers::ThreadSafe
 		// Enqueue data
 		void enqueue(dataType&& data);
 		// Dequeue data item and store it into data. Undefined if queue is empty
-		void dequeue(dataType& data);
+		bool dequeue(dataType& data);
 
 		const bool empty() const;
 		const size_t size() const;
@@ -104,14 +104,19 @@ namespace GRAVLib::Containers::ThreadSafe
 		m_Queue.push(std::move(data));
 	}
 	template<typename T>
-	inline void queue<T>::dequeue(dataType& data)
+	inline bool queue<T>::dequeue(dataType& data)
 	{
 		GRAVLib_LOCK_AUTO_MUTEX;
+
+		if (empty())
+			return false;
 
 		// Copy the front of the queue
 		data = std::move(m_Queue.front());
 
 		m_Queue.pop();
+
+		return true;
 	}
 
 	template<typename T>
