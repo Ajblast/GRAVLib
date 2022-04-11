@@ -24,7 +24,7 @@ namespace GRAVLib::Concurrency::Jobs
 {
 	GRAVLib_JOB_ENTRY_POINT(switchToReadyFiber);
 
-	struct job
+	struct GRAVLibAPI job
 	{
 		declaration m_Declaration;
 		ref<counter>* m_Counter;

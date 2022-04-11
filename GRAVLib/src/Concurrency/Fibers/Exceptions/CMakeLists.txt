@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		FiberCallbackException.cpp
 		FiberCreationException.cpp
 		FiberException.cpp

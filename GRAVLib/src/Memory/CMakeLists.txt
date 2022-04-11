@@ -1,4 +1,4 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		Pointers.cpp
 )

@@ -1,4 +1,4 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 )
 add_subdirectory(ThreadSafe)

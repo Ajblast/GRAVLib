@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		ThreadAffinityException.cpp
 		ThreadCreationException.cpp
 		ThreadException.cpp

@@ -9,8 +9,6 @@
 #include <mutex>
 #include <algorithm>
 
-#define GRAV_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...); }
-
 namespace GRAVLib::Events
 {
 	template<typename... T>
@@ -26,7 +24,7 @@ namespace GRAVLib::Events
 
 
 	template<typename... T>
-	class GRAVLibAPI event
+	class event
 	{
 	public:
 		using callback = eventCallback<bool, T...>;

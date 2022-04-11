@@ -8,7 +8,7 @@ namespace GRAVLib::Containers::ThreadSafe
 {
 	// A thread safe queue
 	template<typename T>
-	class GRAVLibAPI queue
+	class queue
 	{
 	public:
 		using dataType = T;
@@ -137,14 +137,14 @@ namespace GRAVLib::Containers::ThreadSafe
 
 
 	template<typename T>
-	GRAVLibAPI bool operator==(const queue<T>& lhs, const queue<T>& rhs)
+	bool operator==(const queue<T>& lhs, const queue<T>& rhs)
 	{
 		GRAVLib_LOCK_LOCKS(lhs.GRAVLib_AUTO_MUTEX_NAME, rhs.GRAVLib_AUTO_MUTEX_NAME);
 
 		return lhs.m_Queue == rhs.m_Queue;
 	}
 	template<typename T>
-	GRAVLibAPI bool operator<=>(const queue<T>& lhs, const queue<T>& rhs)
+	bool operator<=>(const queue<T>& lhs, const queue<T>& rhs)
 	{
 		GRAVLib_LOCK_LOCKS(lhs.GRAVLib_AUTO_MUTEX_NAME, rhs.GRAVLib_AUTO_MUTEX_NAME);
 

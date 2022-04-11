@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		Counter.cpp
 		Declaration.cpp
 		JobManager.cpp

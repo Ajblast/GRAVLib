@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		FileSink.cpp
 		ISink.cpp
 		MSVCSink.cpp

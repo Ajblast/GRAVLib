@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		Thread.cpp
 		ThreadID.cpp
 		ThreadTypes.cpp

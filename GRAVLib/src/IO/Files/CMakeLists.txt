@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		FilesModes.cpp
 		File.cpp
 		TextFile.cpp

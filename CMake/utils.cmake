@@ -21,11 +21,11 @@ function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests LinkL
 	add_subdirectory(${SourcePath})
 	target_precompile_headers(${LibName} PRIVATE ${pchName})
 	target_include_directories(${LibName} PUBLIC ${IncludePath})
-	target_link_libraries(${LibName} ${LinkLibraries})
+	target_link_libraries(${LibName} PUBLIC ${LinkLibraries})
 
 	# Is the lib a static or dynamic lib
 	if(${LibType} STREQUAL SHARED)
-		target_compile_definitions(${LibName} PUBLIC "${LibName}_EXPORTS")
+		target_compile_definitions(${LibName} PRIVATE "${LibName}_EXPORTS")
 	elseif(${LibType} STREQUAL STATIC)
 	endif()
 
@@ -49,6 +49,7 @@ function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests LinkL
 		message("Include Path: ${IncludePath}")
 		message("Source Path: ${SourcePath}")
 		message("Tests Path: ${TestsPath}")
+		message("Link Libraries: " ${LinkLibraries})
 
 		if(BuildTypes)
 			message("")
@@ -71,7 +72,6 @@ function(makeexe ExeName ExePath DynamicRuntime pchName LinkLibraries)
 
 	set(IncludePath ${ExePath}/include)
 	set(SourcePath ${ExePath}/src)
-	set(TestsPath ${ExePath}/tests)
 
 	#Create the Exerary
 	add_executable(${ExeName})
@@ -79,7 +79,7 @@ function(makeexe ExeName ExePath DynamicRuntime pchName LinkLibraries)
 	add_subdirectory(${SourcePath})
 	target_precompile_headers(${ExeName} PRIVATE ${pchName})
 	target_include_directories(${ExeName} PUBLIC ${IncludePath})
-	target_link_libraries(${ExeName} ${LinkLibraries})
+	target_link_libraries(${ExeName} PUBLIC ${LinkLibraries})
 
 	#Should the exe be compiled with a dynamic msvc runtime or static
 	setmsvcruntime(${TargetName} ${DynamicRuntime})
@@ -98,7 +98,7 @@ function(makeexe ExeName ExePath DynamicRuntime pchName LinkLibraries)
 		message("")
 		message("Include Path: ${IncludePath}")
 		message("Source Path: ${SourcePath}")
-		message("Tests Path: ${TestsPath}")
+		message("Link Libraries: " ${LinkLibraries})
 
 		if(BuildTypes)
 			message("")

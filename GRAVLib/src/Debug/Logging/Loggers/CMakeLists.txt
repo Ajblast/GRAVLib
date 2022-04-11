@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		Logger.cpp
 		LogManager.cpp
 		LogMessage.cpp

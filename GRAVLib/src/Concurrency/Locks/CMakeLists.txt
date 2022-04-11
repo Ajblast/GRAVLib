@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		MultiLock.cpp
 		RecursiveLock.cpp
 		ScopedLock.cpp

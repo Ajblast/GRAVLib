@@ -1,5 +1,5 @@
 #target_sources(${TestName} 
-#	PUBLIC
+#	PRIVATE
 #)
 
 add_subdirectory(Files)
