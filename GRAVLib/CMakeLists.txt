@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-makelib(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/${PROJECT_NAME} SHARED True pch.h ${BuildTests} "")
+makelib(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/${PROJECT_NAME} SHARED True pch.h ${GRAVLib_BuildTests} "")
 
 option(GRAVLib_ENABLE_PROFILING "Enable Profiler" OFF)
 cmake_dependent_option(GRAVLib_ENABLE_CONSOLE_PROFILING "Enable Console Logging" OFF GRAVLib_ENABLE_PROFILING OFF)
