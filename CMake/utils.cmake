@@ -7,7 +7,7 @@ function(setMSVCRuntime TargetName DynamicRuntime)
 	endif()
 endfunction()
 
-function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests)
+function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests LinkLibraries)
 	set(LibName ${LibName} PARENT_SCOPE)
 	set(TargetName ${LibName})
 
@@ -21,6 +21,7 @@ function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests)
 	add_subdirectory(${SourcePath})
 	target_precompile_headers(${LibName} PRIVATE ${pchName})
 	target_include_directories(${LibName} PUBLIC ${IncludePath})
+	target_link_libraries(${LibName} ${LinkLibraries})
 
 	# Is the lib a static or dynamic lib
 	if(${LibType} STREQUAL SHARED)
@@ -64,7 +65,7 @@ function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests)
 	endif()
 endfunction()
 
-function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests)
+function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests LinkLibraries)
 	set(ExeName ${ExeName} PARENT_SCOPE)
 	set(TargetName ${LibName})
 
@@ -78,6 +79,7 @@ function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests)
 	add_subdirectory(${SourcePath})
 	target_precompile_headers(${ExeName} PRIVATE ${pchName})
 	target_include_directories(${ExeName} PUBLIC ${IncludePath})
+	target_link_libraries(${ExeName} ${LinkLibraries})
 
 	#Should the exe be compiled with a dynamic msvc runtime or static
 	setmsvcruntime(${TargetName} ${DynamicRuntime})
