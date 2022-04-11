@@ -32,7 +32,7 @@ function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests)
 	setmsvcruntime(${TargetName} ${DynamicRuntime})
 
 	#Print debug info about the project
-	if(DebugInfo)
+	if(GRAVLib_DebugInfo)
 		message("")
 		message("Compile Library: ${LibName}")
 		message("Library Type: ${LibType}")
@@ -83,7 +83,7 @@ function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests)
 	setmsvcruntime(${TargetName} ${DynamicRuntime})
 
 	#Print debug info about the project
-	if(DebugInfo)
+	if(GRAVLib_DebugInfo)
 		message("")
 		message("Compile Executable: ${ExeName}")
 		message("Dynamic Runtime: ${DynamicRuntime}")
@@ -114,7 +114,7 @@ function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests)
 endfunction()
 
 function(maketest TargetName DynamicRuntime LinkLibraries)
-	if(DebugInfo)
+	if(GRAVLib_DebugInfo)
 		message("")
 		message("Make Tests: ${TargetName}")
 		message("Dynamic Runtime: ${DynamicRuntime}")

@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.21)
 
-#Default tests
-if(NOT DEFINED BuildTests)
-	set(BuildTests True)
+option(GRAVLib_BuildTests "Build Tests" ON)
+option(GRAVLib_DebugInfo "Enable CMAKE Debug Info" ON)
+
+#Enable Tests
+if(GRAVLib_BuildTests)
 	enable_testing()
 endif()
 
@@ -14,11 +16,6 @@ if(NOT DEFINED BuildTypes)
 		MINSIZEREL
 		DEBUG
 	)
-endif()
-
-#Enable debug by default if the varaible isn't set
-if(NOT DEFINED DebugInfo)
-	set(DebugInfo True)
 endif()
 
 set(ProjectLanguage CXX)
@@ -37,6 +34,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
+include(CMake/utils.cmake)
 
 #Include Google Test
 set(BUILD_GMOCK OFF)
