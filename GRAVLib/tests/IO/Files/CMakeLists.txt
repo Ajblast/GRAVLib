@@ -1,5 +1,5 @@
 target_sources(${TestName} 
-	PUBLIC
+	PRIVATE
 		FileModesTests.cpp
 		FileTests.cpp
 		TextFileTests.cpp

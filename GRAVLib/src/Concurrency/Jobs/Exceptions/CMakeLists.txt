@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		CounterWaitListFullException.cpp
 		ReadyFiberException.cpp
 )

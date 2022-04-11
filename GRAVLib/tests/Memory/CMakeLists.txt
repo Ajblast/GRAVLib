@@ -1,4 +1,4 @@
 target_sources(${TestName} 
-	PUBLIC
+	PRIVATE
 		
 )

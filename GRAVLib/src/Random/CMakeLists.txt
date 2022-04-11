@@ -1,5 +1,5 @@
 target_sources(${TargetName} 
-	PUBLIC
+	PRIVATE
 		IRandomNumberGenerator.cpp
 		MT19937.cpp
 )

@@ -1,5 +1,5 @@
 target_sources(${TestName} 
-	PUBLIC
+	PRIVATE
 		LoggerTests.cpp
 		LogManagerTests.cpp
 )

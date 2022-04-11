@@ -20,7 +20,7 @@ namespace GRAVLib
 {
 	// A singleton is any object that should only every have a single instance. All singletons must implement GRAVLib_SINGLETON_INSTANCE
 	template<typename T>
-	class GRAVLibAPI singleton
+	class singleton
 	{
 	public:
 		singleton();

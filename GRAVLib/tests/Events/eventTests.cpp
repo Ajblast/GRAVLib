@@ -5,7 +5,7 @@
 
 namespace GRAVLib::Events
 {
-	class GRAVLibAPI simpleEventHandleGenerator : public IEventHandleGenerator
+	class simpleEventHandleGenerator : public IEventHandleGenerator
 	{
 	public:
 		virtual ~simpleEventHandleGenerator() {}
@@ -91,7 +91,7 @@ namespace GRAVLib::Events
 
 		try
 		{
-			eventHandle handle = sut.registerCallback(GRAV_BIND_EVENT_FN(memberFunction));
+			eventHandle handle = sut.registerCallback(GRAVLib_BIND_FN(memberFunction));
 
 			EXPECT_EQ(handle, 0) << "First simple handle is not 0";
 			EXPECT_EQ(sut.size(), 1) << "Event size is not 1 with a single registered callback";

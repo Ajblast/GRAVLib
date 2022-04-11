@@ -6,7 +6,7 @@ namespace GRAVLib::Concurrency::Locks
 {
 	// A RAII wrapper for any lock that conforms to the BasicLockable requirements
 	template<class L>
-	class GRAVLibAPI scopedLock
+	class scopedLock
 	{
 	public:
 		explicit scopedLock(L& lock);

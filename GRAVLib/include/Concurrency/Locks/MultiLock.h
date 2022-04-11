@@ -8,7 +8,7 @@ namespace GRAVLib::Concurrency::Locks
 {
 	// A multilock is a RAII lock that is able to hold a lock for multiple locks at a time. 
 	template<class... L>
-	class GRAVLibAPI multiLock
+	class multiLock
 	{
 	public:
 		explicit multiLock(L&... locks);
@@ -36,7 +36,7 @@ namespace GRAVLib::Concurrency::Locks
 
 	// Specialization of a multilock that only has a single lock
 	template<class L>
-	class GRAVLibAPI multiLock<L>
+	class multiLock<L>
 	{
 	public:
 		explicit multiLock(L& lock);// : m_Lock(lock) { m_Lock.lock(); }
