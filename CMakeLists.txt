@@ -36,5 +36,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
 include(CMake/utils.cmake)
 
+#Include Google Test
+set(BUILD_GMOCK OFF)
+set(gtest_force_shared_crt ON)
+add_subdirectory(GoogleTest)
+
 #Include GRAVLib
 add_subdirectory(GRAVLib)
