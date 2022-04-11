@@ -65,9 +65,9 @@ function(makelib LibName LibPath LibType DynamicRuntime pchName BuildTests LinkL
 	endif()
 endfunction()
 
-function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests LinkLibraries)
+function(makeexe ExeName ExePath DynamicRuntime pchName LinkLibraries)
 	set(ExeName ${ExeName} PARENT_SCOPE)
-	set(TargetName ${LibName})
+	set(TargetName ${ExeName})
 
 	set(IncludePath ${ExePath}/include)
 	set(SourcePath ${ExePath}/src)
@@ -107,11 +107,6 @@ function(makeexe ExeName ExePath DynamicRuntime pchName BuildTests LinkLibraries
 				message("${BuildType} Flags: ${CMAKE_${ProjectLanguage}_FLAGS_${BuildType}}")
 			endforeach()
 		endif()
-	endif()
-
-	#Build the tests if they should be created
-	if(BuildTests)
-		add_subdirectory(${TestsPath})
 	endif()
 endfunction()
 
