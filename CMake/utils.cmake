@@ -127,10 +127,10 @@ function(maketest TargetName DynamicRuntime LinkLibraries)
 	set(TestName ${TargetName} PARENT_SCOPE)
 
 	add_executable(${TargetName})
+	include(GoogleTest)
 	target_link_libraries(${TargetName} GTest::gtest_main ${LinkLibraries})
 	
 	setmsvcruntime(${TargetName} ${DynamicRuntime})
 
-	include(GoogleTest)
 	gtest_discover_tests(${TargetName})
 endfunction()
