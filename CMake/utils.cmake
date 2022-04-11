@@ -1,3 +1,9 @@
+#Include Google Test
+set(BUILD_GMOCK OFF)
+set(gtest_force_shared_crt ON)
+add_subdirectory(GoogleTest)
+
+
 function(setMSVCRuntime TargetName DynamicRuntime)
 	#Should the lib be compiled with a dynamic msvc runtime or static
 	if(DynamicRuntime)
