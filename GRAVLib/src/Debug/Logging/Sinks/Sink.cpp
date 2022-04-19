@@ -1,5 +1,5 @@
-#include "GRAVLib/Debug/Logging/Sinks/Sink.h"
-#include "GRAVLib/Concurrency/Atomics/Atomics.h"
+#include "Debug/Logging/Sinks/Sink.h"
+#include "Concurrency/Atomics/Atomics.h"
 
 GRAVLib::Debug::Logging::Sinks::sink::sink() : m_Verbosity(logVerbosity::off)
 {

@@ -1,4 +1,4 @@
-#include "GRAVLib/IO/Exceptions/IOException.h"
+#include "IO/Exceptions/IOException.h"
 
 GRAVLib::IO::Exceptions::ioException::ioException(const std::string& description) noexcept : std::runtime_error(description)
 {}

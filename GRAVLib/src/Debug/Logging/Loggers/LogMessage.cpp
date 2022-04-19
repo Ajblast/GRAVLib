@@ -1,4 +1,4 @@
-#include "GRAVLib/Debug/Logging/Loggers/LogMessage.h"
+#include "Debug/Logging/Loggers/LogMessage.h"
 
 GRAVLib::Debug::Logging::logMessage::logMessage() :
 	m_Verbosity(logVerbosity::off)

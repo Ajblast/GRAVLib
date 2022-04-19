@@ -1,4 +1,4 @@
-#include "GRAVLib/Concurrency/Threads/ThreadID.h"
+#include "Concurrency/Threads/ThreadID.h"
 
 GRAVLib::Concurrency::Threads::threadID::threadID() :
 	m_ThreadID(GRAVLib_INVALID_THREAD_ID), m_Handle(nullptr)

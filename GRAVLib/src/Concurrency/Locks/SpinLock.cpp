@@ -1,4 +1,4 @@
-#include "GRAVLib/Concurrency/Locks/SpinLock.h"
+#include "Concurrency/Locks/SpinLock.h"
 #include <thread>
 
 GRAVLib::Concurrency::Locks::spinLock::spinLock()

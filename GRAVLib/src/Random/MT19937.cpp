@@ -1,4 +1,4 @@
-#include "GRAVLib/Random/MT19937.h"
+#include "Random/MT19937.h"
 
 GRAVLib::Random::mt19937::mt19937()
 {

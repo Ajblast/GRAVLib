@@ -1,4 +1,4 @@
-#include "GRAVLib/Debug/Logging/Logging.h"
+#include "Debug/Logging/Logging.h"
 
 // TODO: Allow time stamping and allowing categories
 void GRAVLib::Debug::Logging::reportAssertionFailure(const std::string& expression, const std::string& file, size_t line)

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "GRAVLib/GRAVLibCore.h"
-#include "GRAVLib/Random/IRandomNumberGenerator.h"
+#include "GRAVLibCore.h"
+#include "Random/IRandomNumberGenerator.h"
 
 namespace GRAVLib::Random
 {

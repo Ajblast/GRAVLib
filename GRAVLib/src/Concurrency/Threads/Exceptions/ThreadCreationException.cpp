@@ -1,4 +1,4 @@
-#include "GRAVLib/Concurrency/Threads/Exceptions/ThreadCreationException.h"
+#include "Concurrency/Threads/Exceptions/ThreadCreationException.h"
 
 GRAVLib::Concurrency::Threads::Exceptions::threadCreationException::threadCreationException(const std::string& description) :
 	threadException(description)

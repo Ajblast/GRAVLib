@@ -1,4 +1,4 @@
-#include "GRAVLib/Time\Timestep.h"
+#include "Time\Timestep.h"
 
 GRAVLib::Time::timestep::timestep() : m_Time(0)
 {

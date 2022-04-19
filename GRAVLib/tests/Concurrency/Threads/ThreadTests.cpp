@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "GRAVLib/GRAVLibCore.h"
-#include "GRAVLib/Concurrency/Threads/Thread.h"
+#include "GRAVLibCore.h"
+#include "Concurrency/Threads/Thread.h"
 
 namespace GRAVLib::Concurrency::Threads
 {

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "GRAVLib/GRAVLibCore.h"
-#include "GRAVLib/Containers/ThreadSafe/Queue.h"
+#include "GRAVLibCore.h"
+#include "Containers/ThreadSafe/Queue.h"
 
 namespace GRAVLib::Containers::ThreadSafe
 {

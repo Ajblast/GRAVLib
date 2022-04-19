@@ -1,4 +1,4 @@
-#include "GRAVLib/Concurrency/Fibers/Exceptions/FiberException.h"
+#include "Concurrency/Fibers/Exceptions/FiberException.h"
 
 GRAVLib::Concurrency::Fibers::Exceptions::fiberException::fiberException(const std::string& description) : 
 	std::runtime_error(description)

@@ -1,5 +1,5 @@
-#include "GRAVLib/Debug/Logging/Loggers/LogManager.h"
-#include "GRAVLib/Debug/Logging/Sinks/FileSink.h"
+#include "Debug/Logging/Loggers/LogManager.h"
+#include "Debug/Logging/Sinks/FileSink.h"
 
 GRAVLib_SINGLETON_SET_INSTANCE(GRAVLib::Debug::Logging::logManager);
 

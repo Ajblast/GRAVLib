@@ -1,8 +1,8 @@
-#include "GRAVLib/Concurrency/Threads/Thread.h"
-#include "GRAVLib/Concurrency/Threads/Exceptions/ThreadException.h"
-#include "GRAVLib/Concurrency/Threads/Exceptions/ThreadCreationException.h"
-#include "GRAVLib/Concurrency/Threads/Exceptions/ThreadAffinityException.h"
-#include "GRAVLib/Debug/Logging/Logging.h"
+#include "Concurrency/Threads/Thread.h"
+#include "Concurrency/Threads/Exceptions/ThreadException.h"
+#include "Concurrency/Threads/Exceptions/ThreadCreationException.h"
+#include "Concurrency/Threads/Exceptions/ThreadAffinityException.h"
+#include "Debug/Logging/Logging.h"
 
 #if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
 #define NOMINMAX

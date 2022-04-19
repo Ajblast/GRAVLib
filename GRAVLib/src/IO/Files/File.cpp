@@ -1,5 +1,5 @@
-#include "GRAVLib/IO/Files/File.h"
-#include "GRAVLib/IO/Exceptions/IOException.h"
+#include "IO/Files/File.h"
+#include "IO/Exceptions/IOException.h"
 
 #include <stdexcept>
 

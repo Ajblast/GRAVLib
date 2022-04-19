@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "GRAVLib/GRAVLibCore.h"
-#include "GRAVLib/Events/Event.h"
+#include "GRAVLibCore.h"
+#include "Events/Event.h"
 #include <functional>
 
 namespace GRAVLib::Events
