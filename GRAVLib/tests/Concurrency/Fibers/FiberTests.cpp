@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "GRAVLibCore.h"
-#include "Concurrency/Fibers/Fiber.h"
+#include "GRAVLib/GRAVLibCore.h"
+#include "GRAVLib/Concurrency/Fibers/Fiber.h"
 
 namespace GRAVLib::Concurrency::Fibers
 {

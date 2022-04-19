@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <thread>
-#include "GRAVLibCore.h"
-#include "Time/Stopwatch.h"
+#include "GRAVLib/GRAVLibCore.h"
+#include "GRAVLib/Time/Stopwatch.h"
 
 namespace GRAVLib::Time
 {

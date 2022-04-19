@@ -1,4 +1,4 @@
-#include "Concurrency/Threads/Exceptions/ThreadAffinityException.h"
+#include "GRAVLib/Concurrency/Threads/Exceptions/ThreadAffinityException.h"
 
 GRAVLib::Concurrency::Threads::Exceptions::threadAffinityException::threadAffinityException(const std::string& description) : 
 	threadException(description)

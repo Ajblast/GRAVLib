@@ -1,4 +1,4 @@
-#include "Debug/Logging/Sinks/FileSink.h"
+#include "GRAVLib/Debug/Logging/Sinks/FileSink.h"
 
 GRAVLib::Debug::Logging::Sinks::fileSink::fileSink(const std::string& filePath, bool truncate) : 
 	m_File(filePath, GRAVLib::IO::fileMode::OUTPUT | GRAVLib::IO::fileMode::APPEND, false)

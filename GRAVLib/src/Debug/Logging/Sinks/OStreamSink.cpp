@@ -1,4 +1,4 @@
-#include "Debug/Logging/Sinks/OStreamSink.h"
+#include "GRAVLib/Debug/Logging/Sinks/OStreamSink.h"
 
 GRAVLib::Debug::Logging::Sinks::ostreamSink::ostreamSink(std::ostream& os, bool forceFlush) : m_OStream(os), m_ForceFlush(forceFlush)
 {

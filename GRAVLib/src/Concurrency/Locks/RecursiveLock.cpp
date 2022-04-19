@@ -1,5 +1,5 @@
-#include "Concurrency/Threads/Thread.h"
-#include "Concurrency/Locks/RecursiveLock.h"
+#include "GRAVLib/Concurrency/Threads/Thread.h"
+#include "GRAVLib/Concurrency/Locks/RecursiveLock.h"
 #include <thread>
 
 GRAVLib::Concurrency::Locks::recursiveLock::recursiveLock() :
