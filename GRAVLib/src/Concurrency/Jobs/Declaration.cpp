@@ -1,4 +1,4 @@
-#include "Concurrency/Jobs/Declaration.h"
+#include "GRAVLib/Concurrency/Jobs/Declaration.h"
 
 GRAVLib::Concurrency::Jobs::declaration::declaration() :
 	m_Arg(0), m_Priority(jobPriority::NORMAL)

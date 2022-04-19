@@ -1,4 +1,4 @@
-#include "Debug/Logging/Sinks/MSVCSink.h"
+#include "GRAVLib/Debug/Logging/Sinks/MSVCSink.h"
 
 #if GRAVLib_PLATFORM == GRAVLib_PLATFORM_WINDOWS
 #ifndef	WIN32_LEAN_AND_MEAN

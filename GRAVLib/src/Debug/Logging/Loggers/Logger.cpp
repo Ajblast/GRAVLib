@@ -1,5 +1,5 @@
-#include "Debug/Logging/Loggers/Logger.h"
-#include "Concurrency/Atomics/Atomics.h"
+#include "GRAVLib/Debug/Logging/Loggers/Logger.h"
+#include "GRAVLib/Concurrency/Atomics/Atomics.h"
 
 GRAVLib::Debug::Logging::logger::logger()
 {}

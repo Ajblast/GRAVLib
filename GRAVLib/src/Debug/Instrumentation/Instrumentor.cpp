@@ -1,6 +1,6 @@
-#include "Debug/Instrumentation/Instrumentor.h"
-#include "Concurrency/Threads/Thread.h"
-#include "IO/Exceptions/IOException.h"
+#include "GRAVLib/Debug/Instrumentation/Instrumentor.h"
+#include "GRAVLib/Concurrency/Threads/Thread.h"
+#include "GRAVLib/IO/Exceptions/IOException.h"
 #include <format>
 
 GRAVLib_SINGLETON_SET_INSTANCE(GRAVLib::Debug::instrumentor);

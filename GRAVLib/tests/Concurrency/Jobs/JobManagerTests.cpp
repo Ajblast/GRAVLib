@@ -1,7 +1,7 @@
-#include "GRAVLibCore.h"
-#include "Concurrency/Jobs/JobManager.h"
-#include "Concurrency/Jobs/JobSystem.h"
-#include "Time/Stopwatch.h"
+#include "GRAVLib/GRAVLibCore.h"
+#include "GRAVLib/Concurrency/Jobs/JobManager.h"
+#include "GRAVLib/Concurrency/Jobs/JobSystem.h"
+#include "GRAVLib/Time/Stopwatch.h"
 #include <gtest/gtest.h>
 #include <format>
 #include <iostream>
