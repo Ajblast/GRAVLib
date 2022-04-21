@@ -5,3 +5,5 @@
 #define GRAVLib_ANONYMOUS_VARIABLE(str) GRAVLib_CONCAT_STRING(str, __LINE__)
 
 #define GRAVLib_BIND_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
+#define GRAVLib_BIT(value) (1 << value)
