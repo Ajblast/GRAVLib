@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GRAVLib/GRAVLibCore.h" 
-#include "GRAVLib/Memory/Singleton.h"
 #include "GRAVLib/Concurrency/Threads/ThreadID.h"
 #include "GRAVLib/Concurrency/Locks/Locks.h"
 

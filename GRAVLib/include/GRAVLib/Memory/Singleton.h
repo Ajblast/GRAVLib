@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GRAVLib/GRAVLibCore.h"
 #include "GRAVLib/Debug/Assertions.h"
 
 #if GRAVLib_COMPILER == GRAVLib_COMPILER_MSVC

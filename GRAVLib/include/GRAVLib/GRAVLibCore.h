@@ -6,4 +6,5 @@
 #include "GRAVLib/Utils/MacroDefinitions.h"
 #include "GRAVLib/Utils/FunctionSignature.h"
 #include "GRAVLib/Memory/Pointers.h"
+#include "GRAVLib/Memory/Singleton.h"
 #include "GRAVLib/Debug/Assertions.h"

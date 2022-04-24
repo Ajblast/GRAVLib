@@ -11,7 +11,6 @@
 #include "GRAVLib/Containers/ThreadSafe/Queue.h"
 #include "GRAVLib/Concurrency/Locks/Locks.h"
 #include "GRAVLib/Concurrency/Locks/SpinLock.h"
-#include "GRAVLib/Memory/Singleton.h"
 
 #include <unordered_map>
 #include <vector>

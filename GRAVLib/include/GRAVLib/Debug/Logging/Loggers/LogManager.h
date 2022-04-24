@@ -4,7 +4,6 @@
 #include "GRAVLib/Concurrency/Locks/Locks.h"
 #include "GRAVLib/Debug/Logging/Loggers/Logger.h"
 #include "GRAVLib/Debug/Logging/Sinks/ISink.h"
-#include "GRAVLib/Memory/Singleton.h"
 
 #include <string>
 #include <memory>
